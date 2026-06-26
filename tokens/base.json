@@ -1,0 +1,30 @@
+{
+  "spacing": {
+    "xxs": { "value": "4px" },
+    "xs": { "value": "8px" },
+    "sm": { "value": "12px" },
+    "md": { "value": "16px" },
+    "lg": { "value": "24px" },
+    "xl": { "value": "32px" },
+    "xxl": { "value": "48px" },
+    "section": { "value": "96px" }
+  },
+  "radius": {
+    "xs": { "value": "4px" },
+    "sm": { "value": "6px" },
+    "md": { "value": "8px" },
+    "lg": { "value": "12px" },
+    "xl": { "value": "16px" },
+    "pill": { "value": "9999px" }
+  },
+  "text": {
+    "micro": { "value": "10px" },
+    "badge": { "value": "11px" },
+    "xs": { "value": "12px" },
+    "caption": { "value": "13px" },
+    "sm": { "value": "14px" },
+    "base": { "value": "16px" },
+    "lg": { "value": "18px" },
+    "xl": { "value": "22px" }
+  }
+}

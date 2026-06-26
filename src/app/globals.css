@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "../tokens/_generated.css";
+
+@theme inline {
+  /* ── 색상 토큰 ── */
+  --color-primary: var(--color-primary);
+  --color-ink: var(--color-ink);
+  --color-body: var(--color-body);
+  --color-muted: var(--color-muted);
+  --color-subtle: var(--color-subtle);
+  --color-canvas: var(--color-canvas);
+  --color-hairline: var(--color-hairline);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --color-accent: var(--color-accent);
+  --color-surface-soft: var(--color-surface-soft);
+  --color-surface-card: var(--color-surface-card);
+  --color-surface-strong: var(--color-surface-strong);
+  --color-surface-dark: var(--color-surface-dark);
+  --color-on-primary: var(--color-on-primary);
+  --color-on-dark: var(--color-on-dark);
+  --color-badge-orange: var(--color-badge-orange);
+  --color-badge-pink: var(--color-badge-pink);
+  --color-badge-violet: var(--color-badge-violet);
+  --color-badge-emerald: var(--color-badge-emerald);
+  --color-category-dev: var(--color-category-dev);
+  --color-category-content: var(--color-category-content);
+  --color-category-ops: var(--color-category-ops);
+  --color-category-crm: var(--color-category-crm);
+  --color-category-plan: var(--color-category-plan);
+  --color-award-special-bg: var(--color-award-special-bg);
+  --color-award-special-text: var(--color-award-special-text);
+  --color-award-special-border: var(--color-award-special-border);
+  --color-award-gold-bg: var(--color-award-gold-bg);
+  --color-award-gold-text: var(--color-award-gold-text);
+  --color-award-gold-border: var(--color-award-gold-border);
+  --color-award-silver-bg: var(--color-award-silver-bg);
+  --color-award-silver-text: var(--color-award-silver-text);
+  --color-award-silver-border: var(--color-award-silver-border);
+  --color-award-bronze-bg: var(--color-award-bronze-bg);
+  --color-award-bronze-text: var(--color-award-bronze-text);
+  --color-award-bronze-border: var(--color-award-bronze-border);
+  --color-award-commend-bg: var(--color-award-commend-bg);
+  --color-award-commend-text: var(--color-award-commend-text);
+  --color-award-commend-border: var(--color-award-commend-border);
+  --color-tool-bg: var(--color-tool-bg);
+  --color-tool-text: var(--color-tool-text);
+  --color-tool-border: var(--color-tool-border);
+  --color-reuse-bg: var(--color-reuse-bg);
+  --color-reuse-text: var(--color-reuse-text);
+  --color-pack-bg: var(--color-pack-bg);
+  --color-pack-text: var(--color-pack-text);
+  --color-pack-border: var(--color-pack-border);
+
+  /* ── 반경 토큰 (pill은 신규) ── */
+  --radius-pill: var(--radius-pill);
+
+  /* ── 스페이싱 토큰 ── */
+  --spacing-xxs: var(--spacing-xxs);
+  --spacing-xs: var(--spacing-xs);
+  --spacing-sm: var(--spacing-sm);
+  --spacing-md: var(--spacing-md);
+  --spacing-lg: var(--spacing-lg);
+  --spacing-xl: var(--spacing-xl);
+  --spacing-xxl: var(--spacing-xxl);
+  --spacing-section: var(--spacing-section);
+
+  /* ── 텍스트 크기 토큰 (신규) ── */
+  --text-micro: var(--text-micro);
+  --text-badge: var(--text-badge);
+  --text-caption: var(--text-caption);
+
+  /* ── 폰트 ── */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+@keyframes panel-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes panel-slide-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
