@@ -42,7 +42,7 @@ export function PromptDetailPanel({
 
   return (
     <aside
-      className="w-[440px] h-full flex flex-col overflow-hidden"
+      className="w-full h-full flex flex-col overflow-hidden"
       style={{
         animation: isClosing
           ? "panel-slide-out 0.25s ease-in forwards"

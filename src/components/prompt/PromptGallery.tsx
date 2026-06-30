@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import type { PromptEntry } from "@/types";
 import { PromptCard } from "./PromptCard";
 import { PromptDetailPanel } from "./PromptDetailPanel";
@@ -23,7 +23,39 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
   const [displayedId, setDisplayedId] = useState<string | null>(null);
   const [isClosing, setIsClosing] = useState(false);
   const [activeCategory, setActiveCategory] = useState("전체");
+  const [panelWidth, setPanelWidth] = useState(() => {
+    if (typeof window === "undefined") return 480;
+    return Number(localStorage.getItem("v-prompt-panel-width")) || 480;
+  });
+  const [isDragging, setIsDragging] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dragState = useRef<{ startX: number; startWidth: number } | null>(null);
+
+  const handleDragStart = useCallback(
+    (e: React.PointerEvent) => {
+      e.preventDefault();
+      dragState.current = { startX: e.clientX, startWidth: panelWidth };
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      setIsDragging(true);
+    },
+    [panelWidth],
+  );
+
+  const handleDragMove = useCallback((e: React.PointerEvent) => {
+    if (!dragState.current) return;
+    const delta = dragState.current.startX - e.clientX;
+    const next = Math.min(
+      800,
+      Math.max(300, dragState.current.startWidth + delta),
+    );
+    setPanelWidth(next);
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    dragState.current = null;
+    setIsDragging(false);
+    localStorage.setItem("v-prompt-panel-width", String(panelWidth));
+  }, [panelWidth]);
 
   const filtered = useMemo(
     () =>
@@ -130,9 +162,22 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
 
       {/* Panel wrapper */}
       <div
-        className="sticky top-0 h-screen flex-shrink-0 overflow-hidden border-l border-hairline bg-canvas transition-[width] duration-300 ease-out"
-        style={{ width: panelOpen ? "440px" : "0px" }}
+        className={`sticky top-0 h-screen flex-shrink-0 overflow-hidden border-l border-hairline bg-canvas ${
+          !isDragging ? "transition-[width] duration-300 ease-out" : ""
+        }`}
+        style={{ width: panelOpen ? panelWidth : 0 }}
       >
+        {/* Drag handle */}
+        {panelOpen && (
+          <div
+            className="absolute left-0 top-0 w-1.5 h-full z-20 cursor-col-resize group"
+            onPointerDown={handleDragStart}
+            onPointerMove={handleDragMove}
+            onPointerUp={handleDragEnd}
+          >
+            <div className="w-full h-full group-hover:bg-primary/30 transition-colors" />
+          </div>
+        )}
         {displayed && (
           <PromptDetailPanel
             entry={displayed}
