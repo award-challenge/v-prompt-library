@@ -25,6 +25,29 @@
     "sm": { "value": "14px" },
     "base": { "value": "16px" },
     "lg": { "value": "18px" },
-    "xl": { "value": "22px" }
+    "xl": { "value": "22px" },
+    "2xl": { "value": "24px" },
+    "display-sm": { "value": "28px" },
+    "display-md": { "value": "36px" },
+    "display-lg": { "value": "48px" },
+    "display-xl": { "value": "64px" }
+  },
+  "leading": {
+    "none": { "value": "1" },
+    "display-xl": { "value": "1.05" },
+    "display-lg": { "value": "1.1" },
+    "display-md": { "value": "1.15" },
+    "display-sm": { "value": "1.2" },
+    "heading": { "value": "1.3" },
+    "label": { "value": "1.4" },
+    "body": { "value": "1.5" }
+  },
+  "tracking": {
+    "display-xl": { "value": "-2px" },
+    "display-lg": { "value": "-1.5px" },
+    "display-md": { "value": "-1px" },
+    "display-sm": { "value": "-0.5px" },
+    "title": { "value": "-0.3px" },
+    "normal": { "value": "0px" }
   }
 }

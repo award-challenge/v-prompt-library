@@ -4,8 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import type { PromptEntry } from "@/types";
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
-import { PromptResultPreview } from "./PromptResultPreview";
 
 const CATEGORY_META: Record<string, { icon: string; bg: string }> = {
   "개발/자동화": { icon: "⚙️", bg: "bg-category-dev" },
@@ -21,13 +19,34 @@ interface PromptDetailPanelProps {
   isClosing?: boolean;
 }
 
+function PropertyRow({ label, value }: { label: string; value: string }) {
+  if (!value) return null;
+  return (
+    <div className="grid grid-cols-[80px_1fr] items-baseline gap-xs">
+      <span className="text-caption text-subtle shrink-0">{label}</span>
+      <span className="text-sm text-body">{value}</span>
+    </div>
+  );
+}
+
+function Section({ label, value }: { label: string; value: string }) {
+  if (!value) return null;
+  return (
+    <div>
+      <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-xxs">
+        {label}
+      </p>
+      <p className="text-sm text-body leading-body">{value}</p>
+    </div>
+  );
+}
+
 export function PromptDetailPanel({
   entry,
   onClose,
   isClosing = false,
 }: PromptDetailPanelProps) {
   const [copied, setCopied] = useState(false);
-  const [showFullPrompt, setShowFullPrompt] = useState(false);
   const meta = CATEGORY_META[entry.category] ?? {
     icon: "📌",
     bg: "bg-surface-soft",
@@ -50,7 +69,7 @@ export function PromptDetailPanel({
       }}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Header */}
+      {/* Hero */}
       <div
         className={`relative h-40 flex-shrink-0 ${meta.bg} flex items-center justify-center`}
       >
@@ -74,10 +93,10 @@ export function PromptDetailPanel({
       </div>
 
       {/* Scrollable body */}
-      <div className="flex-1 overflow-y-auto p-xs flex flex-col gap-xs">
-        {/* Title + Badges */}
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-wrap gap-1">
+      <div className="flex-1 overflow-y-auto flex flex-col">
+        {/* 제목 + 배지 + 프로퍼티 */}
+        <div className="px-lg pt-lg pb-md border-b border-hairline">
+          <div className="flex flex-wrap gap-1 mb-sm">
             <Badge variant="award" value={entry.award}>
               {entry.award}
             </Badge>
@@ -88,119 +107,85 @@ export function PromptDetailPanel({
               </Badge>
             ))}
           </div>
-          <h2 className="text-lg font-semibold text-ink leading-snug">
+
+          <h2 className="text-2xl font-semibold leading-heading tracking-title text-ink">
             {entry.title}
           </h2>
-        </div>
 
-        {/* Meta grid */}
-        <div className="grid grid-cols-2 gap-x-md gap-y-3 text-sm">
-          <div>
-            <p className="text-caption text-subtle mb-0.5">Core</p>
-            <p className="text-body font-medium">{entry.core}</p>
-          </div>
-          <div>
-            <p className="text-caption text-subtle mb-0.5">Cell</p>
-            <p className="text-body font-medium">{entry.cell}</p>
-          </div>
-          <div>
-            <p className="text-caption text-subtle mb-0.5">제출자</p>
-            <p className="text-body font-medium">{entry.submitter}</p>
-          </div>
-          <div>
-            <p className="text-caption text-subtle mb-0.5">반복 유형</p>
-            <p className="text-body font-medium">{entry.repeatType}</p>
-          </div>
-          <div className="col-span-2">
-            <p className="text-caption text-subtle mb-0.5">재사용 활용</p>
-            <p
-              className={`text-sm font-medium ${entry.reuseType ? "text-reuse-text" : "text-subtle"}`}
-            >
-              {entry.reuseType ? "✓ 재사용 가능" : "단발성 활용"}
-            </p>
+          <div className="mt-md flex flex-col gap-xs">
+            <PropertyRow label="Cell" value={entry.cell} />
+            <PropertyRow label="제출자" value={entry.submitter} />
+            <PropertyRow label="업무 대분류" value={entry.core} />
           </div>
         </div>
 
-        <hr className="border-hairline" />
-
-        {/* Business context */}
-        <div className="flex flex-col gap-md">
-          <div>
-            <p className="text-caption font-semibold text-subtle uppercase tracking-wide mb-1">
-              업무 목적
-            </p>
-            <p className="text-sm text-body leading-relaxed">{entry.purpose}</p>
-          </div>
-          <div>
-            <p className="text-caption font-semibold text-subtle uppercase tracking-wide mb-1">
-              활용 상황
-            </p>
-            <p className="text-sm text-body leading-relaxed">{entry.usage}</p>
-          </div>
-          <div>
-            <p className="text-caption font-semibold text-subtle uppercase tracking-wide mb-1">
-              활용 효과
-            </p>
-            <p className="text-sm text-body leading-relaxed">{entry.effect}</p>
-          </div>
+        {/* 업무 상황 + Prompt 제목 */}
+        <div className="px-lg py-md flex flex-col gap-md border-b border-hairline">
+          <Section label="업무 상황" value={entry.usage} />
+          <Section label="Prompt 제목" value={entry.promptSummary} />
         </div>
 
-        <hr className="border-hairline" />
-
-        {/* Prompt */}
-        <div className="flex flex-col gap-3">
-          <div>
-            <p className="text-caption font-semibold text-subtle uppercase tracking-wide mb-1">
-              Prompt 요약
-            </p>
-            <p className="text-sm text-body leading-relaxed">
-              {entry.promptSummary}
-            </p>
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-caption font-semibold text-subtle uppercase tracking-wide">
-                Prompt 전문
-              </p>
-              <button
-                onClick={() => setShowFullPrompt((p) => !p)}
-                className="text-xs text-subtle hover:text-muted transition-colors"
-              >
-                {showFullPrompt ? "접기 ▲" : "펼치기 ▼"}
-              </button>
-            </div>
-
-            {showFullPrompt && (
-              <pre className="text-xs text-muted bg-surface-soft border border-hairline rounded-lg p-3 whitespace-pre-wrap font-mono leading-relaxed mb-2">
-                {entry.promptText}
-              </pre>
-            )}
-
-            <Button
-              onClick={handleCopy}
-              variant="secondary"
-              size="sm"
-              className="w-full"
-            >
-              {copied ? "✓ 복사됨" : "📋 Prompt 복사"}
-            </Button>
-          </div>
-        </div>
-
-        <hr className="border-hairline" />
-
-        {/* Result preview */}
-        <div className="flex flex-col gap-2">
-          <p className="text-caption font-semibold text-subtle uppercase tracking-wide">
-            결과물 미리보기
+        {/* 최종 제출 Prompt */}
+        <div className="px-lg py-md border-b border-hairline">
+          <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-sm">
+            최종 제출 Prompt
           </p>
-          <PromptResultPreview entry={entry} />
+          <div className="group relative">
+            <pre className="text-xs text-muted bg-surface-soft border border-hairline rounded-lg p-md whitespace-pre-wrap font-mono leading-body">
+              {entry.promptText}
+            </pre>
+            <button
+              onClick={handleCopy}
+              className="absolute top-sm right-sm opacity-0 group-hover:opacity-100 transition-opacity bg-canvas border border-hairline text-caption font-medium text-muted px-sm py-xxs rounded-md shadow-sm hover:bg-surface-card"
+            >
+              {copied ? "✓ 복사됨" : "복사"}
+            </button>
+          </div>
         </div>
 
-        {/* Tags + Pack candidate */}
-        <div className="flex flex-col gap-2">
-          {entry.tags.length > 0 && (
+        {/* 활용 AI */}
+        {entry.aiTools.length > 0 && (
+          <div className="px-lg py-md border-b border-hairline">
+            <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-sm">
+              활용 AI
+            </p>
+            <div className="flex flex-wrap gap-1">
+              {entry.aiTools.map((tool) => (
+                <Badge key={tool} variant="tool">
+                  {tool}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 결과 링크 */}
+        {entry.resultFileUrl && (
+          <div className="px-lg py-md border-b border-hairline">
+            <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-sm">
+              결과 링크
+            </p>
+            <a
+              href={entry.resultFileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-xs text-sm font-medium text-accent hover:underline"
+            >
+              결과물 보기 →
+            </a>
+          </div>
+        )}
+
+        {/* 활용 방법 */}
+        {entry.effect && (
+          <div className="px-lg py-md border-b border-hairline">
+            <Section label="활용 방법" value={entry.effect} />
+          </div>
+        )}
+
+        {/* 태그 */}
+        {entry.tags.length > 0 && (
+          <div className="px-lg py-md">
             <div className="flex flex-wrap gap-1">
               {entry.tags.map((tag) => (
                 <Badge key={tag} variant="tag">
@@ -208,14 +193,8 @@ export function PromptDetailPanel({
                 </Badge>
               ))}
             </div>
-          )}
-          {entry.packCandidate && (
-            <div className="flex items-center gap-1.5 text-xs text-pack-text bg-pack-bg border border-pack-border rounded-lg px-3 py-2">
-              <span>⭐</span>
-              <span className="font-medium">Pack 후보 선정</span>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </aside>
   );

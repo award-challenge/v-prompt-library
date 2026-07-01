@@ -71,10 +71,33 @@
   --spacing-xxl: var(--spacing-xxl);
   --spacing-section: var(--spacing-section);
 
-  /* ── 텍스트 크기 토큰 (신규) ── */
+  /* ── 텍스트 크기 토큰 ── */
   --text-micro: var(--text-micro);
   --text-badge: var(--text-badge);
   --text-caption: var(--text-caption);
+  --text-2xl: var(--text-2xl);
+  --text-display-sm: var(--text-display-sm);
+  --text-display-md: var(--text-display-md);
+  --text-display-lg: var(--text-display-lg);
+  --text-display-xl: var(--text-display-xl);
+
+  /* ── line-height 토큰 ── */
+  --leading-none: var(--leading-none);
+  --leading-display-xl: var(--leading-display-xl);
+  --leading-display-lg: var(--leading-display-lg);
+  --leading-display-md: var(--leading-display-md);
+  --leading-display-sm: var(--leading-display-sm);
+  --leading-heading: var(--leading-heading);
+  --leading-label: var(--leading-label);
+  --leading-body: var(--leading-body);
+
+  /* ── letter-spacing 토큰 ── */
+  --tracking-display-xl: var(--tracking-display-xl);
+  --tracking-display-lg: var(--tracking-display-lg);
+  --tracking-display-md: var(--tracking-display-md);
+  --tracking-display-sm: var(--tracking-display-sm);
+  --tracking-title: var(--tracking-title);
+  --tracking-normal: var(--tracking-normal);
 
   /* ── 폰트 ── */
   --font-sans:
