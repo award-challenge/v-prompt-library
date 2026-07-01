@@ -88,7 +88,7 @@ export function PromptDetailPanel({
               </Badge>
             ))}
           </div>
-          <h2 className="text-lg font-bold text-ink leading-snug">
+          <h2 className="text-lg font-semibold text-ink leading-snug">
             {entry.title}
           </h2>
         </div>

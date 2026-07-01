@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import type { PromptEntry } from "@/types";
 import { PromptCard } from "./PromptCard";
 import { PromptDetailPanel } from "./PromptDetailPanel";
@@ -23,13 +23,15 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
   const [displayedId, setDisplayedId] = useState<string | null>(null);
   const [isClosing, setIsClosing] = useState(false);
   const [activeCategory, setActiveCategory] = useState("전체");
-  const [panelWidth, setPanelWidth] = useState(() => {
-    if (typeof window === "undefined") return 480;
-    return Number(localStorage.getItem("v-prompt-panel-width")) || 480;
-  });
+  const [panelWidth, setPanelWidth] = useState(480);
   const [isDragging, setIsDragging] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragState = useRef<{ startX: number; startWidth: number } | null>(null);
+
+  useEffect(() => {
+    const saved = Number(localStorage.getItem("v-prompt-panel-width"));
+    if (saved >= 300 && saved <= 800) setPanelWidth(saved);
+  }, []);
 
   const handleDragStart = useCallback(
     (e: React.PointerEvent) => {
@@ -54,8 +56,11 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
   const handleDragEnd = useCallback(() => {
     dragState.current = null;
     setIsDragging(false);
-    localStorage.setItem("v-prompt-panel-width", String(panelWidth));
-  }, [panelWidth]);
+    setPanelWidth((prev) => {
+      localStorage.setItem("v-prompt-panel-width", String(prev));
+      return prev;
+    });
+  }, []);
 
   const filtered = useMemo(
     () =>

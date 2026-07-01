@@ -37,7 +37,7 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
         e.stopPropagation();
         onClick();
       }}
-      className={`cursor-pointer rounded-xl border bg-canvas flex flex-col overflow-hidden transition-all hover:shadow-md ${
+      className={`cursor-pointer rounded-lg border bg-canvas flex flex-col overflow-hidden transition-all hover:shadow-md ${
         isSelected
           ? "border-primary shadow-md ring-1 ring-primary"
           : "border-hairline"

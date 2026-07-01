@@ -4,12 +4,15 @@
 @theme inline {
   /* ── 색상 토큰 ── */
   --color-primary: var(--color-primary);
+  --color-primary-active: var(--color-primary-active);
+  --color-primary-disabled: var(--color-primary-disabled);
   --color-ink: var(--color-ink);
   --color-body: var(--color-body);
   --color-muted: var(--color-muted);
   --color-subtle: var(--color-subtle);
   --color-canvas: var(--color-canvas);
   --color-hairline: var(--color-hairline);
+  --color-hairline-soft: var(--color-hairline-soft);
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);
   --color-error: var(--color-error);
@@ -18,8 +21,10 @@
   --color-surface-card: var(--color-surface-card);
   --color-surface-strong: var(--color-surface-strong);
   --color-surface-dark: var(--color-surface-dark);
+  --color-surface-dark-elevated: var(--color-surface-dark-elevated);
   --color-on-primary: var(--color-on-primary);
   --color-on-dark: var(--color-on-dark);
+  --color-on-dark-soft: var(--color-on-dark-soft);
   --color-badge-orange: var(--color-badge-orange);
   --color-badge-pink: var(--color-badge-pink);
   --color-badge-violet: var(--color-badge-violet);
