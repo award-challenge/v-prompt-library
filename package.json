@@ -2,7 +2,7 @@
   "name": "v-promp",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://parkmj0.github.io/v-prompt-library",
+  "homepage": "https://parkmj0.github.io/v-prompt-library/",
   "scripts": {
     "dev": "next dev",
     "build": "npm run build:tokens && next build",
