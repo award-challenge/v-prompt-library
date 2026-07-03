@@ -167,7 +167,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
           <div className="relative mb-md">
             <Search
               size={16}
-              className="absolute left-md top-1/2 -translate-y-1/2 text-on-dark pointer-events-none"
+              className="absolute left-md top-1/2 z-10 -translate-y-1/2 text-on-dark pointer-events-none"
             />
             <input
               type="text"
@@ -183,7 +183,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
                   e.stopPropagation();
                   setSearchQuery("");
                 }}
-                className="absolute right-md top-1/2 -translate-y-1/2 text-subtle hover:text-ink transition-colors duration-200"
+                className="absolute right-md top-1/2 z-10 -translate-y-1/2 text-subtle hover:text-ink transition-colors duration-200"
                 aria-label="검색 초기화"
               >
                 <X size={16} />
@@ -203,7 +203,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
                 className={`flex-shrink-0 px-md py-sm text-sm font-medium whitespace-nowrap border-b-2 transition-colors duration-200 -mb-px ${
                   activeCategory === value
                     ? "border-accent text-ink font-semibold"
-                    : "border-transparent text-subtle hover:text-muted hover:border-hairline"
+                    : "border-transparent text-tab-default hover:text-muted hover:border-hairline"
                 }`}
               >
                 {label}
