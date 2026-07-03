@@ -21,6 +21,7 @@
   --color-surface-soft: var(--color-surface-soft);
   --color-surface-card: var(--color-surface-card);
   --color-surface-strong: var(--color-surface-strong);
+  --color-surface-search: var(--color-surface-search);
   --color-surface-dark: var(--color-surface-dark);
   --color-surface-dark-elevated: var(--color-surface-dark-elevated);
   --color-on-primary: var(--color-on-primary);
@@ -62,8 +63,14 @@
   /* ── 반경 토큰 (pill은 신규) ── */
   --radius-pill: var(--radius-pill);
 
+  /* ── 그림자 토큰 ── */
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+  --shadow-glow-accent: var(--shadow-glow-accent);
+
   /* ── 스페이싱 토큰 ── */
   --spacing-xxs: var(--spacing-xxs);
+  --spacing-2xs: var(--spacing-2xs);
   --spacing-xs: var(--spacing-xs);
   --spacing-sm: var(--spacing-sm);
   --spacing-md: var(--spacing-md);

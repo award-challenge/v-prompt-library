@@ -2,17 +2,28 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
+import {
+  X,
+  Code2,
+  PenLine,
+  BarChart3,
+  MessageSquare,
+  SearchCheck,
+  Sparkles,
+  Star,
+  Check,
+  Copy,
+  ExternalLink,
+} from "lucide-react";
 import type { PromptEntry } from "@/types";
 import { Badge } from "@/components/ui/Badge";
 
-const CLOSE_ICON = "✕"; // 닫기 버튼 아이콘 — 변경 가능: ×, ⟩⟩, », ▶, ←, ↩
-
-const CATEGORY_META: Record<string, { icon: string; bg: string }> = {
-  "개발/자동화": { icon: "⚙️", bg: "bg-category-dev" },
-  "콘텐츠 제작": { icon: "✏️", bg: "bg-category-content" },
-  "업무 운영": { icon: "📊", bg: "bg-category-ops" },
-  고객관리: { icon: "💬", bg: "bg-category-crm" },
-  "기획/검토": { icon: "🔍", bg: "bg-category-plan" },
+const CATEGORY_META: Record<string, { Icon: typeof Sparkles; tint: string }> = {
+  "개발/자동화": { Icon: Code2, tint: "from-category-dev" },
+  "콘텐츠 제작": { Icon: PenLine, tint: "from-category-content" },
+  "업무 운영": { Icon: BarChart3, tint: "from-category-ops" },
+  고객관리: { Icon: MessageSquare, tint: "from-category-crm" },
+  "기획/검토": { Icon: SearchCheck, tint: "from-category-plan" },
 };
 
 interface PromptDetailPanelProps {
@@ -45,8 +56,8 @@ export function PromptDetailPanel({
   const [activeThumb, setActiveThumb] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const meta = CATEGORY_META[entry.category] ?? {
-    icon: "📌",
-    bg: "bg-surface-soft",
+    Icon: Sparkles,
+    tint: "from-surface-strong",
   };
   const previewImage = entry.thumbnail ?? entry.resultImage;
   const thumbnails = [previewImage, null, null, null];
@@ -79,11 +90,9 @@ export function PromptDetailPanel({
         <button
           onClick={onClose}
           aria-label="패널 닫기"
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-canvas border border-hairline shadow-sm text-subtle hover:bg-surface-soft hover:border-hairline-soft hover:text-ink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-canvas border border-hairline shadow-card text-subtle hover:bg-surface-soft hover:border-hairline-soft hover:text-ink transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
         >
-          <span className="text-base leading-none select-none">
-            {CLOSE_ICON}
-          </span>
+          <X size={16} />
         </button>
       </div>
 
@@ -160,12 +169,15 @@ export function PromptDetailPanel({
                         ? 1
                         : 3;
                   return (
-                    <span
+                    <Star
                       key={i}
-                      className={`text-sm leading-none ${i < filled ? "text-warning" : "text-hairline"}`}
-                    >
-                      ★
-                    </span>
+                      size={14}
+                      className={
+                        i < filled
+                          ? "fill-warning text-warning"
+                          : "fill-transparent text-hairline"
+                      }
+                    />
                   );
                 })}
               </span>
@@ -174,7 +186,7 @@ export function PromptDetailPanel({
             {entry.packCandidate && (
               <PropRow label="팩 후보">
                 <span className="inline-flex items-center gap-xxs text-sm font-medium text-success">
-                  <span>✓</span>
+                  <Check size={14} />
                   <span>활용 가능</span>
                 </span>
               </PropRow>
@@ -184,7 +196,7 @@ export function PromptDetailPanel({
           {/* 우: 결과 미리보기 */}
           <div className="w-44 min-w-[160px] flex-shrink-0 flex flex-col gap-xs">
             {/* 메인 미리보기 카드 */}
-            <div className="border border-hairline rounded-lg overflow-hidden shadow-sm">
+            <div className="rounded-lg overflow-hidden shadow-card">
               {entry.resultFileUrl ? (
                 <a
                   href={entry.resultFileUrl}
@@ -201,20 +213,19 @@ export function PromptDetailPanel({
                     />
                   ) : (
                     <div
-                      className={`absolute inset-0 ${meta.bg} flex flex-col items-center justify-center gap-xs`}
+                      className={`absolute inset-0 bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex flex-col items-center justify-center gap-xs`}
                     >
-                      <span className="text-4xl select-none opacity-60">
-                        {meta.icon}
-                      </span>
+                      <meta.Icon size={28} className="text-on-dark/60" />
                       <span className="text-xs text-subtle text-center px-sm leading-snug">
                         결과물 미리보기
                       </span>
                     </div>
                   )}
                   {/* 호버 오버레이 */}
-                  <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/30 transition-colors flex items-center justify-center">
-                    <span className="text-xs font-medium text-canvas opacity-0 group-hover:opacity-100 transition-opacity bg-ink/60 backdrop-blur-sm px-sm py-xxs rounded-md whitespace-nowrap">
-                      결과물 보기 ↗
+                  <div className="absolute inset-0 bg-canvas/0 group-hover:bg-canvas/50 transition-colors duration-200 flex items-center justify-center">
+                    <span className="inline-flex items-center gap-xxs text-xs font-medium text-on-dark opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-canvas/70 backdrop-blur-sm px-sm py-xxs rounded-md whitespace-nowrap">
+                      결과물 보기
+                      <ExternalLink size={12} />
                     </span>
                   </div>
                   <div className="absolute bottom-2 right-2 bg-canvas/80 backdrop-blur-sm text-micro px-xs py-xxs rounded-xs text-muted font-medium leading-none">
@@ -224,11 +235,9 @@ export function PromptDetailPanel({
               ) : (
                 <div className="aspect-[4/3] relative">
                   <div
-                    className={`absolute inset-0 ${meta.bg} flex flex-col items-center justify-center gap-xs`}
+                    className={`absolute inset-0 bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex flex-col items-center justify-center gap-xs`}
                   >
-                    <span className="text-4xl select-none opacity-60">
-                      {meta.icon}
-                    </span>
+                    <meta.Icon size={28} className="text-on-dark/60" />
                     <span className="text-xs text-subtle text-center px-sm leading-snug">
                       결과물 미리보기
                     </span>
@@ -259,11 +268,9 @@ export function PromptDetailPanel({
                     <Image src={img} alt="" fill className="object-cover" />
                   ) : (
                     <div
-                      className={`w-full h-full ${meta.bg} flex items-center justify-center`}
+                      className={`w-full h-full bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex items-center justify-center`}
                     >
-                      <span className="text-micro select-none">
-                        {meta.icon}
-                      </span>
+                      <meta.Icon size={12} className="text-on-dark/60" />
                     </div>
                   )}
                 </button>
@@ -298,9 +305,19 @@ export function PromptDetailPanel({
             </pre>
             <button
               onClick={handleCopy}
-              className="absolute top-sm right-sm opacity-0 group-hover:opacity-100 transition-opacity bg-primary-soft text-on-primary text-xs font-medium px-sm py-xxs rounded-md hover:bg-primary-active"
+              className="absolute top-sm right-sm inline-flex items-center gap-xxs opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-accent text-on-dark text-xs font-medium px-sm py-xxs rounded-md hover:opacity-90"
             >
-              {copied ? "✓ Copied" : "Copy"}
+              {copied ? (
+                <>
+                  <Check size={12} />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <Copy size={12} />
+                  Copy
+                </>
+              )}
             </button>
           </div>
         </div>

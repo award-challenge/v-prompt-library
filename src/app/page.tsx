@@ -7,8 +7,12 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-canvas">
       {/* Hero */}
-      <section className="bg-surface-dark text-on-dark px-lg py-xxl">
-        <div className="mx-auto max-w-7xl">
+      <section className="relative overflow-hidden bg-surface-dark text-on-dark px-lg py-xxl">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_20%_15%,var(--color-accent)_0%,transparent_55%),radial-gradient(circle_at_80%_0%,var(--color-badge-violet)_0%,transparent_50%)]"
+        />
+        <div className="relative mx-auto max-w-7xl">
           <p className="text-caption font-medium text-subtle uppercase tracking-normal mb-3">
             V-Prompt Challenge · 1차 Beta
           </p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { Search, X } from "lucide-react";
 import type { PromptEntry } from "@/types";
 import { PromptCard } from "./PromptCard";
 import { PromptDetailPanel } from "./PromptDetailPanel";
@@ -16,12 +17,6 @@ const CATEGORIES: { value: string; label: string }[] = [
 
 const AWARD_FILTERS = ["수상 전체", "Best", "참신상", "운영특별상"];
 const AI_FILTERS = ["AI 전체", "ChatGPT", "Claude", "Gemini"];
-const DIFFICULTY_FILTERS = [
-  "난이도 전체",
-  "바로 복붙",
-  "수정 후 사용",
-  "구조이해 필요",
-];
 
 interface PromptGalleryProps {
   entries: PromptEntry[];
@@ -39,7 +34,6 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [awardFilter, setAwardFilter] = useState("수상 전체");
   const [aiFilter, setAiFilter] = useState("AI 전체");
-  const [difficultyFilter, setDifficultyFilter] = useState("난이도 전체");
   const [panelWidth, setPanelWidth] = useState(480);
   const [isDragging, setIsDragging] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -116,15 +110,10 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
           aiFilter === "AI 전체" ||
           e.aiTools.some((t) => normalizeAI(t) === normalizeAI(aiFilter)),
       )
-      .filter(
-        (e) =>
-          difficultyFilter === "난이도 전체" ||
-          e.repeatType === difficultyFilter,
-      )
       .sort(
         (a, b) => (AWARD_SORT[a.award] ?? 99) - (AWARD_SORT[b.award] ?? 99),
       );
-  }, [searchFiltered, activeCategory, awardFilter, aiFilter, difficultyFilter]);
+  }, [searchFiltered, activeCategory, awardFilter, aiFilter]);
 
   const displayed = useMemo(
     () => entries.find((e) => e.id === displayedId) ?? null,
@@ -176,16 +165,17 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
         <div className="mx-auto max-w-7xl px-lg py-xl" onClick={instantClose}>
           {/* 검색창 */}
           <div className="relative mb-md">
-            <span className="absolute left-md top-1/2 -translate-y-1/2 text-subtle pointer-events-none text-sm">
-              🔍
-            </span>
+            <Search
+              size={16}
+              className="absolute left-md top-1/2 -translate-y-1/2 text-on-dark pointer-events-none"
+            />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClick={(e) => e.stopPropagation()}
               placeholder="제목, 업무 상황, 활용 AI, 키워드로 검색"
-              className="w-full pl-10 pr-10 py-sm bg-surface-soft border border-hairline rounded-md text-sm text-ink placeholder:text-subtle focus:outline-none focus:border-primary-soft transition-colors"
+              className="w-full pl-10 pr-10 py-sm bg-surface-search backdrop-blur-md border border-transparent rounded-md text-sm text-ink placeholder:text-subtle focus:outline-none focus:border-accent/60 focus:ring-2 focus:ring-accent/15 transition-colors duration-200"
             />
             {isSearching && (
               <button
@@ -193,16 +183,16 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
                   e.stopPropagation();
                   setSearchQuery("");
                 }}
-                className="absolute right-md top-1/2 -translate-y-1/2 text-subtle hover:text-ink transition-colors text-sm"
+                className="absolute right-md top-1/2 -translate-y-1/2 text-subtle hover:text-ink transition-colors duration-200"
                 aria-label="검색 초기화"
               >
-                ✕
+                <X size={16} />
               </button>
             )}
           </div>
 
           {/* 1단: 카테고리 탭 */}
-          <div className="flex flex-wrap border-b border-hairline mb-sm">
+          <div className="flex flex-wrap gap-sm border-b border-hairline mb-sm">
             {CATEGORIES.map(({ value, label }) => (
               <button
                 key={value}
@@ -210,9 +200,9 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
                   e.stopPropagation();
                   handleCategoryChange(value);
                 }}
-                className={`flex-shrink-0 px-md py-sm text-sm font-medium whitespace-nowrap border-b-2 transition-colors -mb-px ${
+                className={`flex-shrink-0 px-md py-sm text-sm font-medium whitespace-nowrap border-b-2 transition-colors duration-200 -mb-px ${
                   activeCategory === value
-                    ? "border-primary text-ink font-semibold"
+                    ? "border-accent text-ink font-semibold"
                     : "border-transparent text-subtle hover:text-muted hover:border-hairline"
                 }`}
               >
@@ -224,7 +214,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
           {/* 2단: 상세 필터 칩 */}
           <div className="flex flex-wrap items-center gap-xs py-sm mb-lg">
             {/* 수상 그룹 */}
-            <div className="flex items-center gap-[3px]">
+            <div className="flex items-center gap-2xs">
               {AWARD_FILTERS.map((f) => (
                 <button
                   key={f}
@@ -232,10 +222,10 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
                     e.stopPropagation();
                     setAwardFilter(f);
                   }}
-                  className={`flex-shrink-0 px-sm py-xxs rounded-pill text-xs font-medium whitespace-nowrap transition-colors ${
+                  className={`flex-shrink-0 h-xl flex items-center justify-center px-sm rounded-pill border text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
                     awardFilter === f
-                      ? "bg-primary text-on-primary"
-                      : "bg-surface-card text-muted hover:bg-surface-strong"
+                      ? "bg-accent/15 text-ink border-accent"
+                      : "bg-surface-card text-muted border-transparent hover:bg-surface-strong"
                   }`}
                 >
                   {f}
@@ -246,7 +236,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
             <span className="flex-shrink-0 w-px h-4 bg-hairline" />
 
             {/* AI 그룹 */}
-            <div className="flex items-center gap-[3px]">
+            <div className="flex items-center gap-2xs">
               {AI_FILTERS.map((f) => (
                 <button
                   key={f}
@@ -254,32 +244,10 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
                     e.stopPropagation();
                     setAiFilter(f);
                   }}
-                  className={`flex-shrink-0 px-sm py-xxs rounded-pill text-xs font-medium whitespace-nowrap transition-colors ${
+                  className={`flex-shrink-0 h-xl flex items-center justify-center px-sm rounded-pill border text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
                     aiFilter === f
-                      ? "bg-primary text-on-primary"
-                      : "bg-surface-card text-muted hover:bg-surface-strong"
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-
-            <span className="flex-shrink-0 w-px h-4 bg-hairline" />
-
-            {/* 난이도 그룹 */}
-            <div className="flex items-center gap-[3px]">
-              {DIFFICULTY_FILTERS.map((f) => (
-                <button
-                  key={f}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDifficultyFilter(f);
-                  }}
-                  className={`flex-shrink-0 px-sm py-xxs rounded-pill text-xs font-medium whitespace-nowrap transition-colors ${
-                    difficultyFilter === f
-                      ? "bg-primary text-on-primary"
-                      : "bg-surface-card text-muted hover:bg-surface-strong"
+                      ? "bg-accent/15 text-ink border-accent"
+                      : "bg-surface-card text-muted border-transparent hover:bg-surface-strong"
                   }`}
                 >
                   {f}
@@ -318,7 +286,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
 
       {/* 패널 래퍼 */}
       <div
-        className={`sticky top-0 h-screen flex-shrink-0 overflow-hidden border-l border-hairline bg-canvas ${
+        className={`sticky top-0 h-screen flex-shrink-0 overflow-hidden bg-surface-soft ${
           !isDragging
             ? "transition-[width] duration-[280ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
             : ""
@@ -333,7 +301,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
             onPointerMove={handleDragMove}
             onPointerUp={handleDragEnd}
           >
-            <div className="w-full h-full group-hover:bg-primary/30 transition-colors" />
+            <div className="w-full h-full group-hover:bg-accent/40 transition-colors duration-200" />
           </div>
         )}
         {displayed && (

@@ -1,14 +1,51 @@
 import Image from "next/image";
+import {
+  Code2,
+  PenLine,
+  BarChart3,
+  MessageSquare,
+  SearchCheck,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import type { PromptEntry } from "@/types";
 import { Badge } from "@/components/ui/Badge";
 
-const CATEGORY_META: Record<string, { icon: string; bg: string }> = {
-  "개발/자동화": { icon: "⚙️", bg: "bg-category-dev" },
-  "콘텐츠 제작": { icon: "✏️", bg: "bg-category-content" },
-  "업무 운영": { icon: "📊", bg: "bg-category-ops" },
-  고객관리: { icon: "💬", bg: "bg-category-crm" },
-  "기획/검토": { icon: "🔍", bg: "bg-category-plan" },
+const CATEGORY_META: Record<string, { Icon: typeof Sparkles; tint: string }> = {
+  "개발/자동화": { Icon: Code2, tint: "from-category-dev" },
+  "콘텐츠 제작": { Icon: PenLine, tint: "from-category-content" },
+  "업무 운영": { Icon: BarChart3, tint: "from-category-ops" },
+  고객관리: { Icon: MessageSquare, tint: "from-category-crm" },
+  "기획/검토": { Icon: SearchCheck, tint: "from-category-plan" },
 };
+
+const EXT_LABEL: Record<string, string> = {
+  image: "IMG",
+  pdf: "PDF",
+  docx: "DOCX",
+  pptx: "PPTX",
+  xlsx: "XLSX",
+  video: "MP4",
+};
+
+function PreviewMock({ Icon }: { Icon: typeof Sparkles }) {
+  return (
+    <div className="relative flex h-full w-full items-center justify-center">
+      <div className="absolute h-20 w-28 -rotate-6 rounded-md border border-on-dark/10 bg-on-dark/5" />
+      <div className="relative flex h-20 w-28 rotate-3 flex-col gap-xxs rounded-md border border-on-dark/15 bg-on-dark/10 p-xs shadow-card backdrop-blur-sm">
+        <div className="flex items-center gap-xxs">
+          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-on-dark/15">
+            <Icon size={10} className="text-on-dark" />
+          </span>
+          <span className="h-1 w-6 rounded-full bg-on-dark/20" />
+        </div>
+        <span className="h-1 w-full rounded-full bg-on-dark/15" />
+        <span className="h-1 w-3/4 rounded-full bg-on-dark/15" />
+        <span className="h-1 w-1/2 rounded-full bg-on-dark/10" />
+      </div>
+    </div>
+  );
+}
 
 function RepeatBadge({ repeatType }: { repeatType: string }) {
   const filled =
@@ -26,14 +63,15 @@ function RepeatBadge({ repeatType }: { repeatType: string }) {
       ) : (
         <span className="inline-flex items-center gap-[1px]">
           {Array.from({ length: 5 }, (_, i) => (
-            <span
+            <Star
               key={i}
-              className={`text-sm leading-none select-none ${
-                i < filled ? "text-warning" : "text-hairline-soft"
-              }`}
-            >
-              {i < filled ? "★" : "☆"}
-            </span>
+              size={12}
+              className={
+                i < filled
+                  ? "fill-warning text-warning"
+                  : "fill-transparent text-hairline-soft"
+              }
+            />
           ))}
         </span>
       )}
@@ -49,9 +87,10 @@ interface PromptCardProps {
 
 export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
   const meta = CATEGORY_META[entry.category] ?? {
-    icon: "📌",
-    bg: "bg-surface-soft",
+    Icon: Sparkles,
+    tint: "from-surface-strong",
   };
+  const image = entry.thumbnail ?? entry.resultImage;
 
   return (
     <article
@@ -59,35 +98,40 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
         e.stopPropagation();
         onClick();
       }}
-      className={`cursor-pointer rounded-lg border bg-canvas flex flex-col overflow-hidden transition-all hover:shadow-md ${
-        isSelected
-          ? "border-primary shadow-md ring-1 ring-primary"
-          : "border-hairline"
+      className={`group cursor-pointer rounded-lg border bg-surface-card flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover ${
+        isSelected ? "border-accent shadow-glow-accent" : "border-transparent"
       }`}
     >
       {/* 썸네일 */}
       <div
-        className={`relative h-36 w-full ${meta.bg} flex items-center justify-center flex-shrink-0`}
+        className={`relative h-36 w-full overflow-hidden bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex items-center justify-center flex-shrink-0`}
       >
-        {(entry.thumbnail ?? entry.resultImage) ? (
+        {image ? (
           <Image
-            src={(entry.thumbnail ?? entry.resultImage)!}
+            src={image}
             alt={entry.title}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-200 group-hover:scale-105"
           />
         ) : (
-          <span className="text-4xl select-none">{meta.icon}</span>
+          <div className="transition-transform duration-200 group-hover:scale-105">
+            <PreviewMock Icon={meta.Icon} />
+          </div>
         )}
 
         {/* 수상 배지 — 좌상단 오버레이 (추천작 제외) */}
         {entry.award !== "추천작" && (
-          <div className="absolute top-2 left-2 opacity-80">
+          <div className="absolute top-2 left-2">
             <Badge variant="award" value={entry.award}>
               {entry.award}
             </Badge>
           </div>
         )}
+
+        {/* 결과 파일 확장자 — 우하단, hover 시 노출 */}
+        <span className="absolute bottom-2 right-2 rounded-xs bg-canvas/60 px-xs py-xxs text-micro font-medium text-on-dark-soft opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
+          {EXT_LABEL[entry.resultType] ?? entry.resultType}
+        </span>
       </div>
 
       {/* 본문 */}
@@ -123,7 +167,7 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
         )}
 
         {/* 하단: 반복 활용 */}
-        <div className="mt-auto pt-2 border-t border-hairline flex items-center justify-between gap-xs">
+        <div className="mt-auto pt-2 flex items-center justify-between gap-xs">
           <RepeatBadge repeatType={entry.repeatType} />
           {entry.cell && (
             <span className="text-xs text-subtle truncate shrink-0">
