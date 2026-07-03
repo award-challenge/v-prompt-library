@@ -15,6 +15,7 @@
     "warning": { "value": "#f59e0b", "type": "color" },
     "error": { "value": "#ef4444", "type": "color" },
     "accent": { "value": "#3b82f6", "type": "color" },
+    "selected": { "value": "#7f92b5", "type": "color" },
     "surface": {
       "soft": { "value": "#131316", "type": "color" },
       "card": { "value": "#17171a", "type": "color" },

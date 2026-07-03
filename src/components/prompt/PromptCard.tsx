@@ -6,10 +6,10 @@ import {
   MessageSquare,
   SearchCheck,
   Sparkles,
-  Star,
 } from "lucide-react";
 import type { PromptEntry } from "@/types";
 import { Badge } from "@/components/ui/Badge";
+import { StarRating } from "@/components/ui/StarRating";
 
 const CATEGORY_META: Record<string, { Icon: typeof Sparkles; tint: string }> = {
   "개발/자동화": { Icon: Code2, tint: "from-category-dev" },
@@ -54,27 +54,28 @@ function RepeatBadge({ repeatType }: { repeatType: string }) {
   return (
     <div className="flex items-center gap-xs">
       <span className="text-caption text-subtle font-medium whitespace-nowrap">
-        반복 활용
+        업무 사용 반복성
       </span>
       {repeatType === "바로 복붙" ? (
         <span className="inline-flex items-center px-2 py-0.5 text-badge rounded-pill bg-success/10 text-success border border-success/20 font-medium whitespace-nowrap">
           바로 복붙
         </span>
       ) : (
-        <span className="inline-flex items-center gap-[1px]">
-          {Array.from({ length: 5 }, (_, i) => (
-            <Star
-              key={i}
-              size={12}
-              className={
-                i < filled
-                  ? "fill-warning text-warning"
-                  : "fill-transparent text-hairline-soft"
-              }
-            />
-          ))}
-        </span>
+        <StarRating filled={filled} size={12} />
       )}
+    </div>
+  );
+}
+
+function CrossUsageBadge({ usage }: { usage: string }) {
+  const filled = usage === "동일 업무를 하는 구성원에게 활용 가능" ? 2 : 4;
+
+  return (
+    <div className="flex items-center gap-xs">
+      <span className="text-caption text-subtle font-medium whitespace-nowrap">
+        타업무자 활용 가능성
+      </span>
+      <StarRating filled={filled} size={12} />
     </div>
   );
 }
@@ -99,7 +100,7 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
         onClick();
       }}
       className={`group cursor-pointer rounded-lg border bg-surface-card flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover ${
-        isSelected ? "border-accent shadow-glow-accent" : "border-transparent"
+        isSelected ? "border-selected shadow-glow-accent" : "border-transparent"
       }`}
     >
       {/* 썸네일 */}
@@ -166,14 +167,17 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
           </div>
         )}
 
-        {/* 하단: 반복 활용 */}
-        <div className="mt-auto pt-2 flex items-center justify-between gap-xs">
-          <RepeatBadge repeatType={entry.repeatType} />
-          {entry.cell && (
-            <span className="text-xs text-subtle truncate shrink-0">
-              {entry.cell}
-            </span>
-          )}
+        {/* 하단: 활용지표 */}
+        <div className="mt-auto pt-2 flex flex-col gap-1">
+          <div className="flex items-center justify-between gap-xs">
+            <RepeatBadge repeatType={entry.repeatType} />
+            {entry.cell && (
+              <span className="text-xs text-subtle truncate shrink-0">
+                {entry.cell}
+              </span>
+            )}
+          </div>
+          <CrossUsageBadge usage={entry.usage} />
         </div>
       </div>
     </article>

@@ -18,6 +18,7 @@
   --color-warning: var(--color-warning);
   --color-error: var(--color-error);
   --color-accent: var(--color-accent);
+  --color-selected: var(--color-selected);
   --color-surface-soft: var(--color-surface-soft);
   --color-surface-card: var(--color-surface-card);
   --color-surface-strong: var(--color-surface-strong);

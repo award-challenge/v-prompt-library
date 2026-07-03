@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import {
   X,
-  Star,
   Check,
   Copy,
   ExternalLink,
@@ -17,6 +16,7 @@ import {
 } from "lucide-react";
 import type { PromptEntry } from "@/types";
 import { Badge } from "@/components/ui/Badge";
+import { StarRating } from "@/components/ui/StarRating";
 
 const CATEGORY_META: Record<string, { Icon: typeof Sparkles; tint: string }> = {
   "개발/자동화": { Icon: Code2, tint: "from-category-dev" },
@@ -32,28 +32,6 @@ interface PromptDetailPanelProps {
   isClosing?: boolean;
 }
 
-function StarRating({ filled }: { filled: number }) {
-  return (
-    <span className="inline-flex gap-[2px]">
-      {Array.from({ length: 5 }, (_, i) => {
-        const isFilled = i < filled;
-        return (
-          <Star
-            key={i}
-            size={14}
-            strokeWidth={isFilled ? 2 : 0}
-            className={
-              isFilled
-                ? "fill-warning text-warning"
-                : "fill-hairline text-hairline"
-            }
-          />
-        );
-      })}
-    </span>
-  );
-}
-
 function PropRow({
   label,
   labelClassName = "text-subtle",
@@ -64,7 +42,7 @@ function PropRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-[76px_1fr] items-start gap-xs">
+    <div className="grid grid-cols-[130px_1fr] items-start gap-xs">
       <span className={`text-caption shrink-0 pt-0.5 ${labelClassName}`}>
         {label}
       </span>
@@ -174,7 +152,7 @@ export function PromptDetailPanel({
       </div>
 
       {/* ── 상단 요약 ─────────────────────────────────── */}
-      <div className="px-lg pt-sm pb-lg border-b border-hairline flex flex-col gap-sm">
+      <div className="px-lg pt-lg pb-lg border-b border-hairline flex flex-col gap-sm">
         {/* 배지 */}
         <div className="flex flex-wrap gap-1">
           {entry.award !== "추천작" && (
@@ -192,7 +170,7 @@ export function PromptDetailPanel({
 
         {/* 한 줄 요약 */}
         {entry.promptSummary && (
-          <p className="text-sm text-subtle leading-body">
+          <p className="-mt-xxs text-sm text-subtle leading-body">
             {entry.promptSummary}
           </p>
         )}
@@ -246,7 +224,7 @@ export function PromptDetailPanel({
           활용지표
         </p>
         <div className="flex flex-col gap-xs">
-          <PropRow label="반복 활용" labelClassName="text-muted">
+          <PropRow label="업무 사용 반복성" labelClassName="text-muted">
             <StarRating
               filled={
                 entry.repeatType === "바로 복붙"
@@ -258,7 +236,7 @@ export function PromptDetailPanel({
             />
           </PropRow>
 
-          <PropRow label="타 Cell 활용" labelClassName="text-muted">
+          <PropRow label="타업무자 활용 가능성" labelClassName="text-muted">
             <StarRating
               filled={
                 entry.usage === "동일 업무를 하는 구성원에게 활용 가능" ? 2 : 4
@@ -324,10 +302,10 @@ export function PromptDetailPanel({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-xxs bg-accent text-on-dark text-sm font-medium px-md py-xs rounded-md hover:opacity-90 transition-opacity duration-200"
+              className="inline-flex items-center gap-xxs text-sm text-accent hover:underline break-all"
             >
-              원본 보기
-              <ExternalLink size={14} />
+              {entry.resultFileUrl}
+              <ExternalLink size={14} className="shrink-0" />
             </a>
           </div>
         )}
