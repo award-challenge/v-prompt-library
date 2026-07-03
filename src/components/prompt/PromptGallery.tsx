@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
-import { Search, X } from "lucide-react";
+import { ArrowUp, Search, X } from "lucide-react";
 import type { PromptEntry } from "@/types";
 import { PromptCard } from "./PromptCard";
 import { PromptDetailPanel } from "./PromptDetailPanel";
@@ -34,6 +34,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [awardFilter, setAwardFilter] = useState("수상 전체");
   const [aiFilter, setAiFilter] = useState("AI 전체");
+  const [visibleCount, setVisibleCount] = useState(24);
   const [panelWidth, setPanelWidth] = useState(480);
   const [isDragging, setIsDragging] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -101,7 +102,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
     운영특별상: 3,
   };
 
-  const filtered = useMemo(() => {
+  const filteredEntries = useMemo(() => {
     return searchFiltered
       .filter((e) => activeCategory === "전체" || e.category === activeCategory)
       .filter((e) => awardFilter === "수상 전체" || e.award === awardFilter)
@@ -114,6 +115,18 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
         (a, b) => (AWARD_SORT[a.award] ?? 99) - (AWARD_SORT[b.award] ?? 99),
       );
   }, [searchFiltered, activeCategory, awardFilter, aiFilter]);
+
+  const filterKey = `${searchQuery}|${activeCategory}|${awardFilter}|${aiFilter}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (prevFilterKey !== filterKey) {
+    setPrevFilterKey(filterKey);
+    setVisibleCount(24);
+  }
+
+  const displayedEntries = useMemo(
+    () => filteredEntries.slice(0, visibleCount),
+    [filteredEntries, visibleCount],
+  );
 
   const displayed = useMemo(
     () => entries.find((e) => e.id === displayedId) ?? null,
@@ -257,21 +270,21 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
 
             <span className="ml-auto flex-shrink-0 text-sm text-subtle whitespace-nowrap pl-md">
               {isSearching
-                ? `검색 결과 ${filtered.length}개`
-                : `${filtered.length}개`}
+                ? `검색 결과 ${filteredEntries.length}개 중 ${displayedEntries.length}개 표시`
+                : `총 ${filteredEntries.length}개 중 ${displayedEntries.length}개 표시`}
             </span>
           </div>
 
           {/* 카드 그리드 */}
           <div className="grid gap-md grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.length === 0 ? (
+            {filteredEntries.length === 0 ? (
               <p className="col-span-full text-subtle py-16 text-center text-sm">
                 {isSearching
                   ? `"${searchQuery.trim()}"에 해당하는 수상작이 없습니다.`
                   : "해당 조건에 맞는 수상작이 없습니다."}
               </p>
             ) : (
-              filtered.map((entry) => (
+              displayedEntries.map((entry) => (
                 <PromptCard
                   key={entry.id}
                   entry={entry}
@@ -281,8 +294,40 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
               ))
             )}
           </div>
+
+          {/* 더보기 / 완료 안내 */}
+          {filteredEntries.length > 24 && (
+            <div className="flex items-center justify-center mt-xl">
+              {visibleCount < filteredEntries.length ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setVisibleCount((count) => count + 24);
+                  }}
+                  className="px-lg py-sm rounded-pill border border-hairline bg-surface-card text-sm font-medium text-ink hover:bg-surface-strong hover:border-accent/60 hover:shadow-[0_0_0_1px_var(--color-accent)] transition-colors duration-200"
+                >
+                  더보기
+                </button>
+              ) : (
+                <p className="text-center text-xs text-subtle">
+                  모든 프롬프트를 확인했습니다
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* 위로가기 (브라우저 우측 고정, 패널 열림 시 숨김) */}
+      {filteredEntries.length > 24 && !panelOpen && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="맨 위로 이동"
+          className="fixed bottom-xl right-xl z-30 flex items-center justify-center w-xl h-xl rounded-full border border-hairline bg-surface-card text-muted hover:bg-surface-strong hover:border-accent/60 transition-colors duration-200"
+        >
+          <ArrowUp size={16} />
+        </button>
+      )}
 
       {/* 패널 래퍼 */}
       <div
