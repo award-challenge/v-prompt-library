@@ -192,7 +192,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
           </div>
 
           {/* 1단: 카테고리 탭 */}
-          <div className="flex flex-wrap gap-sm border-b border-hairline mb-sm">
+          <div className="flex flex-wrap gap-sm border-b border-hairline mb-xs">
             {CATEGORIES.map(({ value, label }) => (
               <button
                 key={value}
@@ -224,7 +224,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
                   }}
                   className={`flex-shrink-0 h-xl flex items-center justify-center px-sm rounded-pill border text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
                     awardFilter === f
-                      ? "bg-accent/15 text-ink border-accent"
+                      ? "bg-accent/15 text-ink border-accent/40"
                       : "bg-surface-card text-muted border-transparent hover:bg-surface-strong"
                   }`}
                 >
@@ -246,7 +246,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
                   }}
                   className={`flex-shrink-0 h-xl flex items-center justify-center px-sm rounded-pill border text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
                     aiFilter === f
-                      ? "bg-accent/15 text-ink border-accent"
+                      ? "bg-accent/15 text-ink border-accent/40"
                       : "bg-surface-card text-muted border-transparent hover:bg-surface-strong"
                   }`}
                 >

@@ -144,3 +144,28 @@ button {
     transform: translateX(10px) scale(0.97);
   }
 }
+
+/* ── 패널 내부 스크롤 (브라우저 스크롤과 구분) ── */
+.panel-scrollarea {
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hairline) transparent;
+}
+
+.panel-scrollarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel-scrollarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel-scrollarea::-webkit-scrollbar-thumb {
+  background-color: var(--color-hairline);
+  border-radius: var(--radius-pill);
+}
+
+.panel-scrollarea::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-subtle);
+}

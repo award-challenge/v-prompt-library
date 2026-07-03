@@ -122,7 +122,7 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
         {/* 수상 배지 — 좌상단 오버레이 (추천작 제외) */}
         {entry.award !== "추천작" && (
           <div className="absolute top-2 left-2">
-            <Badge variant="award" value={entry.award}>
+            <Badge variant="award" value={entry.award} bordered={false}>
               {entry.award}
             </Badge>
           </div>
@@ -136,13 +136,13 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
 
       {/* 본문 */}
       <div className="p-md flex flex-col gap-2 flex-1">
-        {/* 메타: 카테고리 · AI */}
-        <div className="flex items-center gap-1 text-xs text-subtle flex-wrap">
-          <span>{entry.category}</span>
-          {entry.aiTools.length > 0 && (
+        {/* 메타: 카테고리 · 난이도 */}
+        <div className="flex items-center gap-1 flex-wrap">
+          <span className="text-xs text-subtle">{entry.category}</span>
+          {entry.repeatType && (
             <>
               <span className="text-hairline">·</span>
-              <span>{entry.aiTools.join(", ")}</span>
+              <span className="text-xs text-subtle">{entry.repeatType}</span>
             </>
           )}
         </div>
@@ -158,7 +158,7 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
             {entry.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center px-2 py-0.5 text-badge rounded-pill bg-accent/10 text-accent border border-accent/20 font-medium"
+                className="inline-flex h-lg items-center justify-center px-2 py-0.5 text-badge leading-none rounded-pill bg-accent/10 text-accent border border-accent/20 font-medium"
               >
                 {tag}
               </span>

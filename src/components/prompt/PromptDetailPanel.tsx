@@ -4,16 +4,16 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import {
   X,
+  Star,
+  Check,
+  Copy,
+  ExternalLink,
   Code2,
   PenLine,
   BarChart3,
   MessageSquare,
   SearchCheck,
   Sparkles,
-  Star,
-  Check,
-  Copy,
-  ExternalLink,
 } from "lucide-react";
 import type { PromptEntry } from "@/types";
 import { Badge } from "@/components/ui/Badge";
@@ -32,16 +32,42 @@ interface PromptDetailPanelProps {
   isClosing?: boolean;
 }
 
+function StarRating({ filled }: { filled: number }) {
+  return (
+    <span className="inline-flex gap-[2px]">
+      {Array.from({ length: 5 }, (_, i) => {
+        const isFilled = i < filled;
+        return (
+          <Star
+            key={i}
+            size={14}
+            strokeWidth={isFilled ? 2 : 0}
+            className={
+              isFilled
+                ? "fill-warning text-warning"
+                : "fill-hairline text-hairline"
+            }
+          />
+        );
+      })}
+    </span>
+  );
+}
+
 function PropRow({
   label,
+  labelClassName = "text-subtle",
   children,
 }: {
   label: string;
+  labelClassName?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="grid grid-cols-[76px_1fr] items-start gap-xs">
-      <span className="text-caption text-subtle shrink-0 pt-0.5">{label}</span>
+      <span className={`text-caption shrink-0 pt-0.5 ${labelClassName}`}>
+        {label}
+      </span>
       <div className="min-w-0">{children}</div>
     </div>
   );
@@ -61,7 +87,7 @@ export function PromptDetailPanel({
   };
   const previewImage = entry.thumbnail ?? entry.resultImage;
   const thumbnails = [previewImage, null, null, null];
-  const currentImage = thumbnails[activeThumb];
+  const thumbnail = thumbnails[activeThumb];
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
@@ -77,7 +103,7 @@ export function PromptDetailPanel({
   return (
     <aside
       ref={scrollRef}
-      className="w-full h-full overflow-y-auto flex flex-col"
+      className="panel-scrollarea w-full h-full overflow-y-auto flex flex-col"
       style={{
         animation: isClosing
           ? "panel-slide-out 0.18s cubic-bezier(0.4, 0, 1, 1) forwards"
@@ -85,15 +111,66 @@ export function PromptDetailPanel({
       }}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* ── 닫기 버튼 (좌상단 sticky) ───────────────────── */}
-      <div className="sticky top-0 z-10 flex items-center justify-end px-md pt-xs bg-canvas/95 backdrop-blur-sm">
-        <button
-          onClick={onClose}
-          aria-label="패널 닫기"
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-canvas border border-hairline shadow-card text-subtle hover:bg-surface-soft hover:border-hairline-soft hover:text-ink transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
-        >
-          <X size={16} />
-        </button>
+      {/* ── 닫기 버튼 (sticky, 섬네일 이미지 위 오버레이) ── */}
+      <div className="sticky top-0 z-20 h-0 overflow-visible">
+        <div className="flex items-center justify-end px-md pt-xs">
+          <button
+            onClick={onClose}
+            aria-label="패널 닫기"
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-canvas/60 backdrop-blur-sm border border-hairline-soft text-on-dark hover:bg-canvas/80 hover:text-on-dark transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* ── 섬네일 이미지 (카드 섬네일과 동일 스타일) ──── */}
+      <div
+        className={`relative h-36 w-full overflow-hidden bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex-shrink-0`}
+      >
+        {thumbnail ? (
+          <Image
+            src={thumbnail}
+            alt={entry.title}
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-xs">
+            <meta.Icon size={28} className="text-on-dark/60" />
+            <span className="text-xs text-subtle text-center px-sm leading-snug">
+              결과물 미리보기
+            </span>
+          </div>
+        )}
+
+        {/* 썸네일 스트립 — 좌하단 오버레이 */}
+        <div className="absolute bottom-2 left-2 z-10 flex gap-xxs">
+          {thumbnails.map((img, i) => (
+            <button
+              key={i}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveThumb(i);
+              }}
+              className={`relative w-lg h-lg rounded-md overflow-hidden flex-shrink-0 ring-1 transition-opacity ${
+                i === activeThumb
+                  ? "ring-on-dark opacity-100"
+                  : "ring-on-dark/30 opacity-60 hover:opacity-90"
+              }`}
+            >
+              {img ? (
+                <Image src={img} alt="" fill className="object-cover" />
+              ) : (
+                <div
+                  className={`w-full h-full bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex items-center justify-center`}
+                >
+                  <meta.Icon size={10} className="text-on-dark/60" />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── 상단 요약 ─────────────────────────────────── */}
@@ -120,181 +197,96 @@ export function PromptDetailPanel({
           </p>
         )}
 
-        {/* 2컬럼: 프로퍼티 | 미리보기 */}
-        <div className="flex flex-wrap items-start gap-md mt-xs">
-          {/* 좌: 프로퍼티 */}
-          <div className="flex-1 min-w-[180px] flex flex-col gap-xs">
-            <PropRow label="업무 유형">
-              <span className="text-sm text-body">{entry.category || "—"}</span>
+        {/* 프로퍼티 */}
+        <div className="flex flex-col gap-xs mt-xs">
+          <PropRow label="업무 유형">
+            <span className="text-sm text-body">{entry.category || "—"}</span>
+          </PropRow>
+
+          <PropRow label="업무 대분류">
+            <span className="text-sm text-body">{entry.core || "—"}</span>
+          </PropRow>
+
+          {entry.aiTools.length > 0 && (
+            <PropRow label="활용 AI">
+              <div className="flex flex-wrap gap-1">
+                {entry.aiTools.map((tool) => (
+                  <Badge key={tool} variant="tool">
+                    {tool}
+                  </Badge>
+                ))}
+              </div>
             </PropRow>
+          )}
 
-            <PropRow label="업무 대분류">
-              <span className="text-sm text-body">{entry.core || "—"}</span>
-            </PropRow>
-
-            {entry.aiTools.length > 0 && (
-              <PropRow label="활용 AI">
-                <div className="flex flex-wrap gap-1">
-                  {entry.aiTools.map((tool) => (
-                    <Badge key={tool} variant="tool">
-                      {tool}
-                    </Badge>
-                  ))}
-                </div>
-              </PropRow>
-            )}
-
-            {entry.tags.length > 0 && (
-              <PropRow label="태그">
-                <div className="flex flex-wrap gap-1">
-                  {entry.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center px-2 py-0.5 text-badge rounded-pill bg-surface-card text-muted border border-hairline font-medium"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </PropRow>
-            )}
-
-            <PropRow label="반복 사용">
-              <span className="inline-flex gap-[2px]">
-                {Array.from({ length: 5 }, (_, i) => {
-                  const filled =
-                    entry.repeatType === "바로 복붙"
-                      ? 5
-                      : entry.repeatType === "구조이해 필요"
-                        ? 1
-                        : 3;
-                  return (
-                    <Star
-                      key={i}
-                      size={14}
-                      className={
-                        i < filled
-                          ? "fill-warning text-warning"
-                          : "fill-transparent text-hairline"
-                      }
-                    />
-                  );
-                })}
-              </span>
-            </PropRow>
-
-            {entry.packCandidate && (
-              <PropRow label="팩 후보">
-                <span className="inline-flex items-center gap-xxs text-sm font-medium text-success">
-                  <Check size={14} />
-                  <span>활용 가능</span>
-                </span>
-              </PropRow>
-            )}
-          </div>
-
-          {/* 우: 결과 미리보기 */}
-          <div className="w-44 min-w-[160px] flex-shrink-0 flex flex-col gap-xs">
-            {/* 메인 미리보기 카드 */}
-            <div className="rounded-lg overflow-hidden shadow-card">
-              {entry.resultFileUrl ? (
-                <a
-                  href={entry.resultFileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block aspect-[4/3] relative group"
-                >
-                  {currentImage ? (
-                    <Image
-                      src={currentImage}
-                      alt={`${entry.title} 결과물`}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div
-                      className={`absolute inset-0 bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex flex-col items-center justify-center gap-xs`}
-                    >
-                      <meta.Icon size={28} className="text-on-dark/60" />
-                      <span className="text-xs text-subtle text-center px-sm leading-snug">
-                        결과물 미리보기
-                      </span>
-                    </div>
-                  )}
-                  {/* 호버 오버레이 */}
-                  <div className="absolute inset-0 bg-canvas/0 group-hover:bg-canvas/50 transition-colors duration-200 flex items-center justify-center">
-                    <span className="inline-flex items-center gap-xxs text-xs font-medium text-on-dark opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-canvas/70 backdrop-blur-sm px-sm py-xxs rounded-md whitespace-nowrap">
-                      결과물 보기
-                      <ExternalLink size={12} />
-                    </span>
-                  </div>
-                  <div className="absolute bottom-2 right-2 bg-canvas/80 backdrop-blur-sm text-micro px-xs py-xxs rounded-xs text-muted font-medium leading-none">
-                    {activeThumb + 1} / {thumbnails.length}
-                  </div>
-                </a>
-              ) : (
-                <div className="aspect-[4/3] relative">
-                  <div
-                    className={`absolute inset-0 bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex flex-col items-center justify-center gap-xs`}
+          {entry.tags.length > 0 && (
+            <PropRow label="태그">
+              <div className="flex flex-wrap gap-1">
+                {entry.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex h-lg items-center justify-center px-2 py-0.5 text-badge leading-none rounded-pill bg-surface-card text-muted border border-hairline font-medium"
                   >
-                    <meta.Icon size={28} className="text-on-dark/60" />
-                    <span className="text-xs text-subtle text-center px-sm leading-snug">
-                      결과물 미리보기
-                    </span>
-                  </div>
-                  <div className="absolute bottom-2 right-2 bg-canvas/80 backdrop-blur-sm text-micro px-xs py-xxs rounded-xs text-muted font-medium leading-none">
-                    {activeThumb + 1} / {thumbnails.length}
-                  </div>
-                </div>
-              )}
-            </div>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </PropRow>
+          )}
 
-            {/* 썸네일 스트립 */}
-            <div className="flex gap-xxs">
-              {thumbnails.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveThumb(i);
-                  }}
-                  className={`relative w-9 h-9 rounded-xs overflow-hidden flex-shrink-0 ring-1 transition-opacity ${
-                    i === activeThumb
-                      ? "ring-muted opacity-100"
-                      : "ring-hairline opacity-40 hover:opacity-70"
-                  }`}
-                >
-                  {img ? (
-                    <Image src={img} alt="" fill className="object-cover" />
-                  ) : (
-                    <div
-                      className={`w-full h-full bg-linear-to-br ${meta.tint} to-surface-dark-elevated flex items-center justify-center`}
-                    >
-                      <meta.Icon size={12} className="text-on-dark/60" />
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
+          <PropRow label="소속">
+            <span className="text-sm text-body">{entry.cell}</span>
+          </PropRow>
         </div>
       </div>
 
-      {/* ── 업무 상황 + 최종 제출 Prompt ────────────────── */}
-      <div className="px-lg py-md flex flex-col gap-md border-b border-hairline">
-        {(entry.cell || entry.submitter) && (
-          <p className="text-caption text-subtle">
-            {[entry.cell, entry.submitter].filter(Boolean).join(" · ")}
-          </p>
-        )}
-        {entry.usage && (
-          <div>
-            <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-xxs">
-              업무 상황
-            </p>
-            <p className="text-sm text-body leading-body">{entry.usage}</p>
-          </div>
-        )}
+      {/* ── 활용지표 ─────────────────────────────────── */}
+      <div className="px-lg py-md border-b border-hairline flex flex-col gap-sm">
+        <p className="text-caption font-semibold text-subtle uppercase tracking-normal">
+          활용지표
+        </p>
+        <div className="flex flex-col gap-xs">
+          <PropRow label="반복 활용" labelClassName="text-muted">
+            <StarRating
+              filled={
+                entry.repeatType === "바로 복붙"
+                  ? 5
+                  : entry.repeatType === "구조이해 필요"
+                    ? 1
+                    : 3
+              }
+            />
+          </PropRow>
+
+          <PropRow label="타 Cell 활용" labelClassName="text-muted">
+            <StarRating
+              filled={
+                entry.usage === "동일 업무를 하는 구성원에게 활용 가능" ? 2 : 4
+              }
+            />
+          </PropRow>
+
+          <PropRow label="활용 방법">
+            {entry.effect && (
+              <span className="text-sm text-body leading-body">
+                {entry.effect}
+              </span>
+            )}
+          </PropRow>
+
+          {entry.packCandidate && (
+            <PropRow label="팩 후보">
+              <span className="inline-flex items-center gap-xxs text-sm font-medium text-success">
+                <Check size={14} />
+                <span>활용 가능</span>
+              </span>
+            </PropRow>
+          )}
+        </div>
+      </div>
+
+      {/* ── 최종 제출 Prompt + 결과물 미리보기 + 활용 방법 ── */}
+      <div className="px-lg py-md flex flex-col border-b border-hairline">
         <div>
           <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-sm">
             최종 제출 Prompt
@@ -321,19 +313,25 @@ export function PromptDetailPanel({
             </button>
           </div>
         </div>
-      </div>
 
-      {/* ── 활용 방법 ─────────────────────────────────── */}
-      {(entry.effect || entry.usage) && (
-        <div className="px-lg py-md border-b border-hairline">
-          <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-xxs">
-            활용 방법
-          </p>
-          <p className="text-sm text-body leading-body">
-            {entry.effect || entry.usage}
-          </p>
-        </div>
-      )}
+        {entry.resultFileUrl && (
+          <div className="mt-md pt-md border-t border-hairline">
+            <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-xxs">
+              결과물 미리보기
+            </p>
+            <a
+              href={entry.resultFileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-xxs bg-accent text-on-dark text-sm font-medium px-md py-xs rounded-md hover:opacity-90 transition-opacity duration-200"
+            >
+              원본 보기
+              <ExternalLink size={14} />
+            </a>
+          </div>
+        )}
+      </div>
     </aside>
   );
 }

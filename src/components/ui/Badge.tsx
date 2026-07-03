@@ -3,6 +3,8 @@ import { Bot, Crown, Trophy, Sparkles, Medal } from "lucide-react";
 interface BadgeProps {
   variant?: "award" | "category" | "tool" | "tag";
   value?: string;
+  bordered?: boolean;
+  className?: string;
   children: React.ReactNode;
 }
 
@@ -28,7 +30,13 @@ const VARIANT_STYLE: Record<string, string> = {
   tag: "bg-surface-soft text-subtle border-hairline",
 };
 
-export function Badge({ variant = "tag", value, children }: BadgeProps) {
+export function Badge({
+  variant = "tag",
+  value,
+  bordered = true,
+  className = "",
+  children,
+}: BadgeProps) {
   const cls =
     variant === "award"
       ? (AWARD_STYLE[value ?? ""] ??
@@ -38,7 +46,7 @@ export function Badge({ variant = "tag", value, children }: BadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-xxs rounded-pill border px-2 py-0.5 text-badge font-medium ${cls}`}
+      className={`inline-flex h-lg items-center justify-center gap-xxs rounded-pill ${bordered ? "border" : "border-0"} px-2 py-0.5 text-badge font-medium leading-none ${cls} ${className}`}
     >
       {variant === "tool" && <Bot size={11} />}
       {AwardIcon && <AwardIcon size={11} />}

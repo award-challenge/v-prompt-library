@@ -1,5 +1,13 @@
+import { existsSync } from "fs";
+import path from "path";
+import Image from "next/image";
 import { getPromptEntries } from "@/data/loader";
 import { PromptGallery } from "@/components/prompt/PromptGallery";
+
+const HERO_BG = "/hero-bg.jpg";
+const hasHeroBg = existsSync(
+  path.join(process.cwd(), "public", HERO_BG.replace(/^\//, "")),
+);
 
 export default async function HomePage() {
   const entries = await getPromptEntries();
@@ -8,10 +16,19 @@ export default async function HomePage() {
     <main className="min-h-screen bg-canvas">
       {/* Hero */}
       <section className="relative overflow-hidden bg-surface-dark text-on-dark px-lg py-xxl">
+        {hasHeroBg && (
+          <Image src={HERO_BG} alt="" fill priority className="object-cover" />
+        )}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_20%_15%,var(--color-accent)_0%,transparent_55%),radial-gradient(circle_at_80%_0%,var(--color-badge-violet)_0%,transparent_50%)]"
         />
+        {hasHeroBg && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-surface-dark/70"
+          />
+        )}
         <div className="relative mx-auto max-w-7xl">
           <p className="text-caption font-medium text-subtle uppercase tracking-normal mb-3">
             V-Prompt Challenge · 1차 Beta
