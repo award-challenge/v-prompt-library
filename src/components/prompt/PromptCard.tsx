@@ -148,22 +148,24 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
         </h2>
 
         {/* 태그 */}
-        {entry.tags.length > 0 && (
+        {(entry.tags.length > 0 || entry.aiTools.length > 0) && (
           <div className="flex flex-wrap gap-1">
-            {entry.tags.slice(0, 3).map((tag) =>
-              entry.aiTools.includes(tag) ? (
-                <Badge key={tag} variant="tool">
-                  {tag}
-                </Badge>
-              ) : (
+            {entry.tags
+              .filter((tag) => !entry.aiTools.includes(tag))
+              .slice(0, 2)
+              .map((tag) => (
                 <span
                   key={tag}
                   className="inline-flex h-lg items-center justify-center px-2 py-0.5 text-badge leading-none rounded-pill bg-accent/10 text-accent border border-accent/20 font-medium"
                 >
                   {tag}
                 </span>
-              ),
-            )}
+              ))}
+            {entry.aiTools.map((tool) => (
+              <Badge key={tool} variant="tool">
+                {tool}
+              </Badge>
+            ))}
           </div>
         )}
 
@@ -173,7 +175,7 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
             <RepeatBadge repeatType={entry.repeatType} />
             {entry.cell && (
               <span className="text-xs text-subtle truncate shrink-0">
-                {entry.cell} Cell
+                {entry.cell}
               </span>
             )}
           </div>

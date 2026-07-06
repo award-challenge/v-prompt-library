@@ -90,7 +90,10 @@ function mapEntry(raw: RawEntry): PromptEntry {
     core: raw.sourceCategory ?? "",
     cell: raw.cell ?? "",
     submitter: raw.submitter ?? "",
-    aiTools: [raw.aiTool].filter(Boolean),
+    aiTools: (raw.aiTool ?? "")
+      .split(",")
+      .map((tool) => tool.trim())
+      .filter(Boolean),
     repeatType: raw.repeatability ?? "",
     reuseType: (raw.repeatability ?? "").includes("활용 가능"),
     purpose: raw.description ?? "",

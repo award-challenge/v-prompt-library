@@ -206,7 +206,7 @@ export function PromptDetailPanel({
           )}
 
           <PropRow label="소속">
-            <span className="text-sm text-body">{entry.cell} Cell</span>
+            <span className="text-sm text-body">{entry.cell}</span>
           </PropRow>
         </div>
       </div>
