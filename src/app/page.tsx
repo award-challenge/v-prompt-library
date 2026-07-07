@@ -3,10 +3,12 @@ import path from "path";
 import Image from "next/image";
 import { getPromptEntries } from "@/data/loader";
 import { PromptGallery } from "@/components/prompt/PromptGallery";
+import { withBasePath } from "@/lib/basePath";
 
-const HERO_BG = "/hero-bg.jpg";
+const HERO_BG_FILE = "/hero-bg.jpg";
+const HERO_BG = withBasePath(HERO_BG_FILE);
 const hasHeroBg = existsSync(
-  path.join(process.cwd(), "public", HERO_BG.replace(/^\//, "")),
+  path.join(process.cwd(), "public", HERO_BG_FILE.replace(/^\//, "")),
 );
 
 export default async function HomePage() {

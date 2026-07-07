@@ -1,6 +1,7 @@
 import { promises as fs, existsSync, readdirSync } from "fs";
 import path from "path";
 import type { PromptEntry, AwardLabel, Category } from "@/types";
+import { withBasePath } from "@/lib/basePath";
 
 const dataDir = path.join(process.cwd(), "public", "data");
 const resultsDir = path.join(process.cwd(), "public", "results");
@@ -18,7 +19,9 @@ const THUMBNAIL_PATTERN = /^thumbnail(\d+)?\.(jpe?g|png|webp)$/i;
 
 function localAssetPath(id: string, filename: string): string | null {
   const absPath = path.join(resultsDir, id, filename);
-  return existsSync(absPath) ? `/results/${id}/${filename}` : null;
+  return existsSync(absPath)
+    ? withBasePath(`/results/${id}/${filename}`)
+    : null;
 }
 
 function getPreviewImages(id: string): string[] {
@@ -32,7 +35,7 @@ function getPreviewImages(id: string): string[] {
         Number(a.match(THUMBNAIL_PATTERN)?.[1] ?? "0") -
         Number(b.match(THUMBNAIL_PATTERN)?.[1] ?? "0"),
     )
-    .map((file) => `/results/${id}/${file}`);
+    .map((file) => withBasePath(`/results/${id}/${file}`));
 }
 
 interface RawEntry {

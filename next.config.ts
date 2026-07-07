@@ -1,11 +1,10 @@
 import type { NextConfig } from "next";
-
-const isProd = process.env.NODE_ENV === "production";
+import { BASE_PATH } from "./src/lib/basePath";
 
 const nextConfig: NextConfig = {
   output: "export",
-  basePath: isProd ? "/v-prompt-library" : "",
-  assetPrefix: isProd ? "/v-prompt-library/" : "",
+  basePath: BASE_PATH,
+  assetPrefix: BASE_PATH ? `${BASE_PATH}/` : "",
   images: {
     unoptimized: true,
   },
