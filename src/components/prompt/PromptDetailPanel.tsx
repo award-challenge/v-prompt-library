@@ -133,11 +133,12 @@ export function PromptDetailPanel({
                 }}
                 className={`relative w-lg h-lg rounded-md overflow-hidden flex-shrink-0 ring-1 transition-opacity ${
                   i === activeThumb
-                    ? "ring-on-dark opacity-100"
+                    ? "ring-on-dark/60 opacity-100"
                     : "ring-on-dark/30 opacity-60 hover:opacity-90"
                 }`}
               >
                 <Image src={img} alt="" fill className="object-cover" />
+                <div className="absolute inset-0 bg-canvas/40 pointer-events-none" />
               </button>
             ))}
           </div>

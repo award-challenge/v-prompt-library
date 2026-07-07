@@ -106,12 +106,17 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
             src={image}
             alt={entry.title}
             fill
-            className="object-cover transition-transform duration-200 group-hover:scale-105"
+            className="object-cover opacity-60 transition-transform duration-200 group-hover:scale-105"
           />
         ) : (
           <div className="transition-transform duration-200 group-hover:scale-105">
             <PreviewMock Icon={meta.Icon} />
           </div>
+        )}
+
+        {/* 상단 딤 그라데이션 — 배지 시인성 보정 */}
+        {image && (
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-linear-to-b from-canvas/70 to-transparent" />
         )}
 
         {/* 수상 배지 — 좌상단 오버레이 (추천작 제외) */}
