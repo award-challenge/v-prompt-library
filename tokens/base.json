@@ -6,6 +6,7 @@
     "sm": { "value": "12px" },
     "md": { "value": "16px" },
     "lg": { "value": "24px" },
+    "lg-xl": { "value": "26px" },
     "xl": { "value": "32px" },
     "xxl": { "value": "48px" },
     "section": { "value": "96px" }

@@ -459,7 +459,7 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
           </div>
 
           {/* 카드 그리드 */}
-          <div className="grid gap-x-md gap-y-lg md:gap-y-xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-x-md gap-y-lg-xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredEntries.length === 0 ? (
               <p className="col-span-full text-subtle py-16 text-center text-sm">
                 {isSearching
