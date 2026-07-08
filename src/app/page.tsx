@@ -54,7 +54,7 @@ export default async function HomePage() {
         )}
         <div className="relative mx-auto max-w-7xl">
           <p className="text-caption font-medium text-subtle uppercase tracking-normal mb-3">
-            V-Prompt Challenge · 1차 Beta
+            V-Prompt Challenge
           </p>
           <h1 className="text-display-md font-semibold leading-display-md tracking-display-md">
             수상작 갤러리

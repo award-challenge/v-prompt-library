@@ -127,7 +127,7 @@ export function ImageLightbox({
         )}
       </div>
 
-      {hasMultiple && (
+      {images.length > 0 && (
         <div
           className="absolute bottom-md left-1/2 z-10 flex -translate-x-1/2 gap-xxs"
           onClick={(e) => e.stopPropagation()}
