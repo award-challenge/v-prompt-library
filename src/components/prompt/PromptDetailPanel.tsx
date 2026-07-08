@@ -281,12 +281,12 @@ export function PromptDetailPanel({
         </div>
       </div>
 
-      {/* ── 결과물 미리보기 + 최종 제출 Prompt + 활용 방법 ── */}
+      {/* ── 최종 결과물 보기 + 제출 Prompt + 활용 방법 ── */}
       <div className="px-lg py-md pb-lg flex flex-col gap-md border-b border-hairline">
         {entry.resultFileUrl && (
           <div>
             <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-xxs">
-              결과물 미리보기
+              최종 결과물 보기
             </p>
             <a
               href={entry.resultFileUrl}
@@ -303,7 +303,7 @@ export function PromptDetailPanel({
 
         <div>
           <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-sm">
-            최종 제출 Prompt
+            제출 Prompt
           </p>
           <div className="group relative">
             <pre className="text-xs text-muted bg-surface-soft border border-hairline rounded-lg p-md whitespace-pre-wrap font-mono leading-body">
