@@ -69,9 +69,14 @@ export function PromptDetailPanel({
   const thumbnails = entry.previewImages;
   const thumbnail = thumbnails[activeThumb] ?? null;
 
+  const [prevEntryId, setPrevEntryId] = useState(entry.id);
+  if (prevEntryId !== entry.id) {
+    setPrevEntryId(entry.id);
+    setActiveThumb(0);
+  }
+
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
-    setActiveThumb(0);
   }, [entry.id]);
 
   async function handleCopy() {

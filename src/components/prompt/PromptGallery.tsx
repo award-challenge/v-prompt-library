@@ -18,6 +18,13 @@ const CATEGORIES: { value: string; label: string }[] = [
 const AWARD_FILTERS = ["수상 전체", "Best", "참신상", "운영특별상"];
 const AI_FILTERS = ["AI 전체", "ChatGPT", "Claude", "Gemini"];
 
+const AWARD_SORT: Record<string, number> = {
+  대상: 0,
+  Best: 1,
+  참신상: 2,
+  운영특별상: 3,
+};
+
 const INITIAL_VISIBLE_COUNT = 24;
 const LOAD_MORE_COUNT = 12;
 const AUTO_LOAD_TRIGGER_COUNT = 2;
@@ -135,6 +142,8 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
 
   useEffect(() => {
     const saved = Number(localStorage.getItem("v-prompt-panel-width"));
+    // localStorage는 SSR에 없어 lazy useState init 대신 마운트 후 1회 동기화한다.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (saved >= 300 && saved <= 800) setPanelWidth(saved);
   }, []);
 
@@ -196,13 +205,6 @@ export function PromptGallery({ entries }: PromptGalleryProps) {
   }, [entries, searchQuery]);
 
   // 5개 조건 AND 필터 + 정렬 (추천작 상단)
-  const AWARD_SORT: Record<string, number> = {
-    대상: 0,
-    Best: 1,
-    참신상: 2,
-    운영특별상: 3,
-  };
-
   const filteredEntries = useMemo(() => {
     return searchFiltered
       .filter((e) => activeCategory === "전체" || e.category === activeCategory)
