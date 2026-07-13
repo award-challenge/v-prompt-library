@@ -19,16 +19,250 @@ const CATEGORIES: { value: string; label: string }[] = [
 const AWARD_FILTERS = ["수상 전체", "Best", "참신상", "운영특별상"];
 const AI_FILTERS = ["AI 전체", "ChatGPT", "Claude", "Gemini"];
 
-const RECOMMENDED_SEARCH_TAGS = [
-  "핵심 개념",
-  "쌍둥이 문항",
-  "문항 검토",
-  "교과 영상",
-  "학습 독려",
-  "디지털 학습지",
-  "리서치 자동화",
-  "교수자료 기획",
+interface RecommendedSearchTag {
+  label: string;
+  aliases: string[];
+}
+
+// 화면엔 label만 노출되고, 클릭 시 검색은 label+aliases 전체를 OR 조건으로 매칭한다.
+const RECOMMENDED_SEARCH_TAG_POOL: RecommendedSearchTag[] = [
+  {
+    label: "문항 자동 생성",
+    aliases: [
+      "문항 자동 생성",
+      "쌍둥이 문항",
+      "문항 생성",
+      "문항 제작",
+      "문제 생성",
+      "평가지",
+      "문항은행",
+      "초등 수학",
+      "원형 문항",
+    ],
+  },
+  {
+    label: "맞춤형 피드백",
+    aliases: [
+      "맞춤형 피드백",
+      "피드백 작성",
+      "강사 피드백",
+      "수업 피드백",
+      "교육 과정 피드백",
+      "코칭",
+      "강사 양성",
+      "교사 교육",
+    ],
+  },
+  {
+    label: "오류 검토 답변",
+    aliases: [
+      "오류 검토 답변",
+      "문항 오류",
+      "오류 신고",
+      "검토 답변",
+      "정답 오류",
+      "해설 오류",
+      "CS 검수",
+      "선생님 답변",
+      "비바샘",
+    ],
+  },
+  {
+    label: "스토리보드 생성",
+    aliases: [
+      "스토리보드 생성",
+      "스토리보드",
+      "콘티",
+      "영상 콘티",
+      "영상 기획",
+      "장면 구성",
+      "컷 구성",
+      "스크립트",
+    ],
+  },
+  {
+    label: "숏폼 영상 기획",
+    aliases: [
+      "숏폼 영상 기획",
+      "숏폼",
+      "영상 기획",
+      "클립",
+      "네이버 클립",
+      "릴스",
+      "쇼츠",
+      "영상 스크립트",
+      "컷별 스크립트",
+    ],
+  },
+  {
+    label: "교육 삽화",
+    aliases: [
+      "교육 삽화",
+      "삽화",
+      "이미지 생성",
+      "AI 이미지",
+      "일러스트",
+      "교재 이미지",
+      "교육 콘텐츠 이미지",
+      "시각화",
+    ],
+  },
+  {
+    label: "광고 카피 생성",
+    aliases: [
+      "광고 카피 생성",
+      "광고 카피",
+      "배너 카피",
+      "프로모션 카피",
+      "홍보 문구",
+      "카피라이팅",
+      "CTA",
+      "A/B 테스트",
+    ],
+  },
+  {
+    label: "경쟁사 모니터링 자동화",
+    aliases: [
+      "경쟁사 모니터링 자동화",
+      "경쟁사 모니터링",
+      "경쟁사 분석",
+      "시장 조사",
+      "리서치 자동화",
+      "에듀테크 리서치",
+      "대시보드",
+    ],
+  },
+  {
+    label: "코드 재사용 에이전트",
+    aliases: [
+      "코드 재사용 에이전트",
+      "코드 재사용",
+      "개발 자동화",
+      "소스코드",
+      "버그 수정",
+      "리팩토링",
+      "개발 Prompt",
+      "Claude Code",
+    ],
+  },
+  {
+    label: "보안성 검토 체크리스트",
+    aliases: [
+      "보안성 검토 체크리스트",
+      "보안성 검토",
+      "보안 체크리스트",
+      "정보보안",
+      "개인정보",
+      "권한 검토",
+      "보안 이슈",
+      "검토 기준",
+    ],
+  },
+  {
+    label: "CS 자동 스크립트",
+    aliases: [
+      "CS 자동 스크립트",
+      "CS",
+      "고객 응대",
+      "상담 스크립트",
+      "답변 작성",
+      "응대 문구",
+      "회원 상담",
+      "문의 답변",
+    ],
+  },
+  {
+    label: "스케줄러 생성",
+    aliases: [
+      "스케줄러 생성",
+      "스케줄러",
+      "일정표",
+      "자동화",
+      "VBA",
+      "엑셀 자동화",
+      "업무 자동화",
+      "일정 관리",
+    ],
+  },
+  {
+    label: "연구개발 업무일지",
+    aliases: [
+      "연구개발 업무일지",
+      "업무일지",
+      "연구개발",
+      "R&D",
+      "개발 기록",
+      "업무 기록",
+      "진행 현황",
+      "보고서",
+    ],
+  },
+  {
+    label: "상담 스크립트 생성",
+    aliases: [
+      "상담 스크립트 생성",
+      "상담 스크립트",
+      "회원 상담",
+      "학부모 상담",
+      "추천 스크립트",
+      "관리교사",
+      "온리원 상담",
+    ],
+  },
+  {
+    label: "홍보 카피라이팅",
+    aliases: [
+      "홍보 카피라이팅",
+      "홍보 카피",
+      "광고 카피",
+      "배너 문구",
+      "프로모션",
+      "마케팅 문구",
+      "CTA",
+      "카피 생성",
+    ],
+  },
+  {
+    label: "공지문 작성 시각화",
+    aliases: [
+      "공지문 작성 시각화",
+      "공지문",
+      "사내 공지",
+      "공지 시각화",
+      "안내문",
+      "랜딩페이지 이미지",
+      "사내 안내",
+      "이미지 생성",
+    ],
+  },
+  {
+    label: "제작 진행 현황표",
+    aliases: [
+      "제작 진행 현황표",
+      "진행 현황",
+      "현황표",
+      "제작 관리",
+      "업무 관리",
+      "일정 관리",
+      "엑셀",
+      "대시보드",
+    ],
+  },
+  {
+    label: "프롬프트 생성",
+    aliases: [
+      "프롬프트 생성",
+      "Prompt 생성",
+      "프롬프트 작성",
+      "프롬프트 자동화",
+      "AI 업무 Prompt",
+      "프롬프트 템플릿",
+      "프롬프트 개선",
+    ],
+  },
 ];
+
+const RECOMMENDED_TAG_VISIBLE_COUNT = 8;
 
 const AWARD_SORT: Record<string, number> = {
   대상: 0,
@@ -153,6 +387,10 @@ export function PromptGallery({
   const [isClosing, setIsClosing] = useState(false);
   const [activeCategory, setActiveCategory] = useState("전체");
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeSearchTerms, setActiveSearchTerms] = useState<string[]>([]);
+  const [recommendedSearchTags, setRecommendedSearchTags] = useState<
+    RecommendedSearchTag[]
+  >([]);
   const [awardFilter, setAwardFilter] = useState("수상 전체");
   const [aiFilter, setAiFilter] = useState("AI 전체");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
@@ -192,6 +430,14 @@ export function PromptGallery({
     return () => mql.removeEventListener("change", update);
   }, []);
 
+  useEffect(() => {
+    // 서버/클라이언트 hydration mismatch를 피하기 위해 마운트 후에만 랜덤 구성한다.
+    const shuffled = [...RECOMMENDED_SEARCH_TAG_POOL].sort(
+      () => Math.random() - 0.5,
+    );
+    setRecommendedSearchTags(shuffled.slice(0, RECOMMENDED_TAG_VISIBLE_COUNT));
+  }, []);
+
   const handleDragStart = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
@@ -222,13 +468,13 @@ export function PromptGallery({
   }, []);
 
   // 검색어 기준 필터링 (카테고리·상세 필터 무관)
-  // 검색어를 공백 기준으로 나눠, 단어 중 하나라도 포함되면 노출한다 (OR 매칭).
+  // 추천 태그 클릭 시엔 activeSearchTerms(대표 키워드+aliases)를 OR 매칭하고,
+  // 수동 입력 시엔 검색어를 공백 기준으로 나눠 단어 중 하나라도 포함되면 노출한다 (OR 매칭).
   const searchFiltered = useMemo(() => {
-    const tokens = searchQuery
-      .trim()
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(Boolean);
+    const tokens =
+      activeSearchTerms.length > 0
+        ? activeSearchTerms.map((term) => term.toLowerCase())
+        : searchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
     if (tokens.length === 0) return entries;
     return entries.filter((e) => {
       const haystack = [
@@ -244,7 +490,7 @@ export function PromptGallery({
         .toLowerCase();
       return tokens.some((token) => haystack.includes(token));
     });
-  }, [entries, searchQuery]);
+  }, [entries, searchQuery, activeSearchTerms]);
 
   // 5개 조건 AND 필터 + 정렬 (추천작 상단)
   const filteredEntries = useMemo(() => {
@@ -381,8 +627,9 @@ export function PromptGallery({
     instantClose();
   }
 
-  function handleRecommendedTagClick(tag: string) {
-    setSearchQuery(tag);
+  function handleRecommendedTagClick(tag: RecommendedSearchTag) {
+    setSearchQuery(tag.label);
+    setActiveSearchTerms(tag.aliases);
   }
 
   const panelOpen = !!selectedId || isClosing;
@@ -474,7 +721,10 @@ export function PromptGallery({
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setActiveSearchTerms([]);
+                  }}
                   onClick={(e) => e.stopPropagation()}
                   placeholder="제목, 업무 상황, 활용 AI, 키워드로 검색"
                   className="w-full pl-10 pr-10 py-sm bg-surface-search/60 backdrop-blur-md border border-transparent rounded-md text-sm text-ink placeholder:text-subtle focus:outline-none focus:border-accent/60 focus:ring-2 focus:ring-accent/15 transition-colors duration-200"
@@ -484,6 +734,7 @@ export function PromptGallery({
                     onClick={(e) => {
                       e.stopPropagation();
                       setSearchQuery("");
+                      setActiveSearchTerms([]);
                     }}
                     className="absolute right-md top-1/2 z-10 -translate-y-1/2 text-subtle hover:text-ink transition-colors duration-200"
                     aria-label="검색 초기화"
@@ -495,18 +746,18 @@ export function PromptGallery({
 
               {/* 추천 검색어 태그 */}
               <div className="mb-md flex flex-wrap items-center justify-center gap-x-md gap-y-xxs sm:gap-y-md">
-                {RECOMMENDED_SEARCH_TAGS.map((tag) => (
+                {recommendedSearchTags.map((tag) => (
                   <button
-                    key={tag}
+                    key={tag.label}
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleRecommendedTagClick(tag);
                     }}
-                    aria-label={`${tag} 검색하기`}
+                    aria-label={`${tag.label} 검색하기`}
                     className="text-caption text-subtle underline underline-offset-4 decoration-transparent transition-colors duration-200 hover:text-on-dark hover:decoration-on-dark focus-visible:text-on-dark focus-visible:decoration-on-dark focus-visible:outline-none"
                   >
-                    #{tag}
+                    #{tag.label}
                   </button>
                 ))}
               </div>
@@ -554,7 +805,7 @@ export function PromptGallery({
                         className={`flex-shrink-0 h-xl flex items-center justify-center px-sm rounded-pill border text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
                           awardFilter === f
                             ? "bg-accent text-on-dark border-transparent"
-                            : "bg-surface-filter text-ink border-transparent hover:bg-surface-strong"
+                            : "bg-surface-filter/70 text-ink border-transparent hover:bg-surface-strong"
                         }`}
                       >
                         {f}
@@ -576,7 +827,7 @@ export function PromptGallery({
                         className={`flex-shrink-0 h-xl flex items-center justify-center px-sm rounded-pill border text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
                           aiFilter === f
                             ? "bg-accent text-on-dark border-transparent"
-                            : "bg-surface-filter text-ink border-transparent hover:bg-surface-strong"
+                            : "bg-surface-filter/70 text-ink border-transparent hover:bg-surface-strong"
                         }`}
                       >
                         {f}
