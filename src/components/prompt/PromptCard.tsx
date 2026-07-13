@@ -19,6 +19,12 @@ const CATEGORY_META: Record<string, { Icon: typeof Sparkles; tint: string }> = {
   "기획/검토": { Icon: SearchCheck, tint: "from-category-plan" },
 };
 
+const REPEAT_TYPE_DOT: Record<string, string> = {
+  "바로 복붙": "bg-success",
+  "수정 후 사용": "bg-warning",
+  "구조이해 필요": "bg-error",
+};
+
 const EXT_LABEL: Record<string, string> = {
   image: "IMG",
   pdf: "PDF",
@@ -137,13 +143,17 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
       {/* 본문 */}
       <div className="p-md flex flex-col gap-2 flex-1">
         {/* 메타: 카테고리 · 난이도 */}
-        <div className="flex items-center gap-1 flex-wrap">
+        <div className="flex items-center gap-xs flex-wrap">
           <span className="text-xs text-subtle">{entry.category}</span>
           {entry.repeatType && (
-            <>
-              <span className="text-hairline">·</span>
-              <span className="text-xs text-subtle">{entry.repeatType}</span>
-            </>
+            <span className="inline-flex items-center gap-[calc(var(--spacing-xxs)/2)] text-xs text-subtle">
+              <span
+                className={`h-[var(--spacing-2xs)] w-[var(--spacing-2xs)] rounded-pill flex-shrink-0 ${
+                  REPEAT_TYPE_DOT[entry.repeatType] ?? "bg-subtle"
+                }`}
+              />
+              {entry.repeatType}
+            </span>
           )}
         </div>
 
