@@ -726,22 +726,30 @@ export function PromptGallery({
                     setActiveSearchTerms([]);
                   }}
                   onClick={(e) => e.stopPropagation()}
-                  placeholder="제목, 업무 상황, 활용 AI, 키워드로 검색"
+                  placeholder="내 업무에 바로 쓸 Prompt를 검색해보세요"
                   className="w-full pl-10 pr-10 py-sm bg-surface-search/60 backdrop-blur-md border border-transparent rounded-md text-sm text-ink placeholder:text-subtle focus:outline-none focus:border-accent/60 focus:ring-2 focus:ring-accent/15 transition-colors duration-200"
                 />
-                {isSearching && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSearchQuery("");
-                      setActiveSearchTerms([]);
-                    }}
-                    className="absolute right-md top-1/2 z-10 -translate-y-1/2 text-subtle hover:text-ink transition-colors duration-200"
-                    aria-label="검색 초기화"
+                <div className="pointer-events-none absolute inset-y-0 left-10 right-10 z-10 flex items-center overflow-hidden">
+                  <span
+                    aria-hidden="true"
+                    className="invisible whitespace-pre text-sm"
                   >
-                    <X size={16} />
-                  </button>
-                )}
+                    {searchQuery}
+                  </span>
+                  {isSearching && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSearchQuery("");
+                        setActiveSearchTerms([]);
+                      }}
+                      className="pointer-events-auto ml-xs flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-on-dark/20 text-on-dark transition-colors duration-200 hover:bg-on-dark/30"
+                      aria-label="검색 초기화"
+                    >
+                      <X size={12} />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* 추천 검색어 태그 */}

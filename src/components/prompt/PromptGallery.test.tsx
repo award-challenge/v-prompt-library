@@ -87,7 +87,7 @@ describe("PromptGallery", () => {
     render(<PromptGallery entries={SAMPLE_ENTRIES} />);
 
     const input = screen.getByPlaceholderText(
-      "제목, 업무 상황, 활용 AI, 키워드로 검색",
+      "내 업무에 바로 쓸 Prompt를 검색해보세요",
     );
     await user.type(input, "콘텐츠 제작");
 
