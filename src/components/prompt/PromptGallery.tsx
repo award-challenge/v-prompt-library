@@ -17,6 +17,8 @@ const CATEGORIES: { value: string; label: string }[] = [
 ];
 
 const AWARD_FILTERS = ["수상 전체", "Best", "참신상", "운영특별상"];
+// "수상 전체"는 무조건 전체가 아니라 수상 등급이 있는 항목만 의미한다 (추천작 제외).
+const AWARDED_LABELS = ["Best", "참신상", "운영특별상"];
 const AI_FILTERS = ["AI 전체", "ChatGPT", "Claude", "Gemini"];
 
 interface RecommendedSearchTag {
@@ -273,7 +275,7 @@ const AWARD_SORT: Record<string, number> = {
 
 const INITIAL_VISIBLE_COUNT = 24;
 const LOAD_MORE_COUNT = 12;
-const FULL_DISPLAY_THRESHOLD = 50;
+const FULL_DISPLAY_THRESHOLD = 60;
 const AUTO_LOAD_TRIGGER_COUNT = 2;
 
 interface PromptGalleryProps {
@@ -393,6 +395,9 @@ export function PromptGallery({
     RecommendedSearchTag[]
   >([]);
   const [awardFilter, setAwardFilter] = useState("수상 전체");
+  // 첫 진입 시(사용자가 수상 필터를 아직 건드리기 전)엔 추천작까지 전체 노출하고,
+  // 수상 필터 버튼을 한 번이라도 클릭한 뒤부터 "수상 전체"가 추천작을 제외한 51개를 의미한다.
+  const [awardFilterTouched, setAwardFilterTouched] = useState(false);
   const [aiFilter, setAiFilter] = useState("AI 전체");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
   const [panelWidth, setPanelWidth] = useState(740);
@@ -498,7 +503,12 @@ export function PromptGallery({
   const filteredEntries = useMemo(() => {
     return searchFiltered
       .filter((e) => activeCategory === "전체" || e.category === activeCategory)
-      .filter((e) => awardFilter === "수상 전체" || e.award === awardFilter)
+      .filter((e) => {
+        if (!awardFilterTouched) return true;
+        return awardFilter === "수상 전체"
+          ? AWARDED_LABELS.includes(e.award)
+          : e.award === awardFilter;
+      })
       .filter(
         (e) =>
           aiFilter === "AI 전체" ||
@@ -507,9 +517,15 @@ export function PromptGallery({
       .sort(
         (a, b) => (AWARD_SORT[a.award] ?? 99) - (AWARD_SORT[b.award] ?? 99),
       );
-  }, [searchFiltered, activeCategory, awardFilter, aiFilter]);
+  }, [
+    searchFiltered,
+    activeCategory,
+    awardFilter,
+    awardFilterTouched,
+    aiFilter,
+  ]);
 
-  const filterKey = `${searchQuery}|${activeCategory}|${awardFilter}|${aiFilter}`;
+  const filterKey = `${searchQuery}|${activeCategory}|${awardFilter}|${awardFilterTouched}|${aiFilter}`;
   const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
   if (prevFilterKey !== filterKey) {
     setPrevFilterKey(filterKey);
@@ -815,6 +831,7 @@ export function PromptGallery({
                         onClick={(e) => {
                           e.stopPropagation();
                           setAwardFilter(f);
+                          setAwardFilterTouched(true);
                         }}
                         className={`flex-shrink-0 h-xl flex items-center justify-center px-sm rounded-pill border text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
                           awardFilter === f
