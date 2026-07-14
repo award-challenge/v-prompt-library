@@ -716,7 +716,7 @@ export function PromptGallery({
                   playsInline
                   {...{ "webkit-playsinline": "true" }}
                   poster={heroBgPcSrc ?? undefined}
-                  className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-top md:block motion-reduce:hidden"
+                  className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-top opacity-80 md:block motion-reduce:hidden"
                 >
                   {heroVideoWebmSrc && (
                     <source src={heroVideoWebmSrc} type="video/webm" />
