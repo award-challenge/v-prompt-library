@@ -86,7 +86,7 @@ describe("PromptDetailPanel", () => {
     expect(link).toHaveAttribute("href", "https://example.com/result");
   });
 
-  it("Copy 버튼 클릭 시 promptText를 클립보드에 복사한다", async () => {
+  it("Copy 버튼 클릭 시 promptText 전문을 클립보드에 복사한다", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, "clipboard", {
       value: { writeText },

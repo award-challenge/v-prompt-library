@@ -34,6 +34,24 @@ interface PromptDetailPanelProps {
   isClosing?: boolean;
 }
 
+// 원문 전체를 화면에 렌더링하지 않기 위해 앞부분 80%만 미리보기로 노출한다.
+// 복사 버튼은 이 미리보기가 아니라 entry.promptText(전문)를 그대로 사용한다.
+function createPromptPreview(prompt?: string, ratio = 0.8) {
+  const fullPrompt = String(prompt ?? "").trim();
+  if (!fullPrompt) {
+    return {
+      promptPreview: "",
+      isPromptTruncated: false,
+    };
+  }
+  const previewLength = Math.floor(fullPrompt.length * ratio);
+  const promptPreview = fullPrompt.slice(0, previewLength).trim();
+  return {
+    promptPreview,
+    isPromptTruncated: fullPrompt.length > promptPreview.length,
+  };
+}
+
 function PropRow({
   label,
   labelClassName = "text-subtle",
@@ -68,6 +86,9 @@ export function PromptDetailPanel({
   };
   const thumbnails = entry.previewImages;
   const thumbnail = thumbnails[activeThumb] ?? null;
+  const { promptPreview, isPromptTruncated } = createPromptPreview(
+    entry.promptText,
+  );
 
   const [prevEntryId, setPrevEntryId] = useState(entry.id);
   if (prevEntryId !== entry.id) {
@@ -308,11 +329,19 @@ export function PromptDetailPanel({
 
         <div>
           <p className="text-caption font-semibold text-subtle uppercase tracking-normal mb-sm">
-            제출 Prompt
+            Prompt 미리보기
           </p>
           <div className="group relative">
             <pre className="text-xs text-muted bg-surface-soft border border-subtle/40 rounded-lg p-md whitespace-pre-wrap font-mono leading-body">
-              {entry.promptText}
+              {promptPreview}
+              {isPromptTruncated && (
+                <>
+                  {"\n\n"}
+                  <span className="text-subtle/60">
+                    ... 이하 내용은 회사 업무 자산 보호를 위해 생략되었습니다.
+                  </span>
+                </>
+              )}
             </pre>
             <button
               onClick={handleCopy}
