@@ -311,7 +311,7 @@ export function PromptDetailPanel({
             제출 Prompt
           </p>
           <div className="group relative">
-            <pre className="text-xs text-muted bg-surface-soft border border-hairline rounded-lg p-md whitespace-pre-wrap font-mono leading-body">
+            <pre className="text-xs text-muted bg-surface-soft border border-subtle/40 rounded-lg p-md whitespace-pre-wrap font-mono leading-body">
               {entry.promptText}
             </pre>
             <button
