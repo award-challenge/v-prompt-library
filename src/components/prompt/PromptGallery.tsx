@@ -264,7 +264,7 @@ const RECOMMENDED_SEARCH_TAG_POOL: RecommendedSearchTag[] = [
   },
 ];
 
-const RECOMMENDED_TAG_VISIBLE_COUNT = 7;
+const RECOMMENDED_TAG_VISIBLE_COUNT = 6;
 
 const AWARD_SORT: Record<string, number> = {
   대상: 0,
@@ -740,7 +740,7 @@ export function PromptGallery({
             </div>
             <div className="pt-xl">
               {/* 검색창 */}
-              <div className="relative mb-xs max-w-full lg:max-w-[65%] mx-auto">
+              <div className="relative mb-xs max-w-full lg:max-w-3xl mx-auto">
                 <Search
                   size={16}
                   className="absolute left-md top-1/2 z-10 -translate-y-1/2 text-on-dark pointer-events-none"
