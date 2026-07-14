@@ -196,7 +196,7 @@ export function PromptDetailPanel({
       </div>
 
       {/* ── 상단 요약 ─────────────────────────────────── */}
-      <div className="px-lg pt-lg pb-lg border-b border-subtle/40 flex flex-col gap-sm">
+      <div className="px-lg pt-lg pb-lg border-b border-subtle/20 flex flex-col gap-sm">
         {/* 배지 */}
         <div className="flex flex-wrap gap-1">
           {entry.award !== "추천작" && (
@@ -263,7 +263,7 @@ export function PromptDetailPanel({
       </div>
 
       {/* ── 활용지표 ─────────────────────────────────── */}
-      <div className="px-lg py-md border-b border-subtle/40 flex flex-col gap-sm">
+      <div className="px-lg py-md border-b border-subtle/20 flex flex-col gap-sm">
         <p className="text-caption font-semibold text-ink uppercase tracking-normal">
           활용지표
         </p>
@@ -308,7 +308,7 @@ export function PromptDetailPanel({
       </div>
 
       {/* ── 최종 결과물 보기 + 제출 Prompt + 활용 방법 ── */}
-      <div className="px-lg py-md pb-lg flex flex-col gap-md border-b border-subtle/40">
+      <div className="px-lg py-md pb-lg flex flex-col gap-md border-b border-subtle/20">
         {entry.resultFileUrl && (
           <div>
             <p className="text-caption font-semibold text-muted uppercase tracking-normal mb-xxs">
@@ -332,7 +332,7 @@ export function PromptDetailPanel({
             Prompt 미리보기
           </p>
           <div className="group relative">
-            <pre className="text-xs text-muted bg-surface-soft border border-subtle/40 rounded-lg p-md whitespace-pre-wrap font-mono leading-body">
+            <pre className="text-xs text-muted bg-surface-soft border border-subtle/20 rounded-lg p-md whitespace-pre-wrap font-mono leading-body">
               {promptPreview}
               {isPromptTruncated && (
                 <>
