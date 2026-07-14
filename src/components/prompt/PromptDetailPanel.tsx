@@ -332,7 +332,7 @@ export function PromptDetailPanel({
             Prompt 미리보기
           </p>
           <div className="group relative">
-            <pre className="text-xs text-muted bg-surface-soft border border-subtle/20 rounded-lg p-md whitespace-pre-wrap font-mono leading-body">
+            <pre className="text-xs text-muted bg-surface-soft border border-subtle/20 rounded-lg p-lg whitespace-pre-wrap font-mono leading-body">
               {promptPreview}
               {isPromptTruncated && (
                 <>
