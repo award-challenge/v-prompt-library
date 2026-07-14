@@ -798,7 +798,7 @@ export function PromptGallery({
               </div>
 
               {/* 1단: 카테고리 탭 */}
-              <div className="border-b border-subtle/50 mb-xs">
+              <div className="border-b border-subtle/40 mb-xs">
                 <HScrollRow isMobile={isMobile} className="gap-sm">
                   {CATEGORIES.map(({ value, label }) => (
                     <button
@@ -810,7 +810,7 @@ export function PromptGallery({
                       className={`flex-shrink-0 px-md py-sm text-sm font-medium whitespace-nowrap border-b-2 transition-colors duration-200 -mb-px ${
                         activeCategory === value
                           ? "border-accent text-on-dark font-semibold"
-                          : "border-transparent text-tab-default hover:text-muted hover:border-subtle/50"
+                          : "border-transparent text-tab-default hover:text-muted hover:border-subtle/40"
                       }`}
                     >
                       {label}
