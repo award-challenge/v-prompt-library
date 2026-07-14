@@ -146,7 +146,7 @@ export function PromptCard({ entry, isSelected, onClick }: PromptCardProps) {
         <div className="flex items-center gap-xs flex-wrap">
           <span className="text-xs text-muted">{entry.category}</span>
           {entry.repeatType && (
-            <span className="inline-flex items-center gap-[calc(var(--spacing-xxs)/2)] text-xs text-muted">
+            <span className="inline-flex items-center gap-[calc(var(--spacing-xxs)/2)] text-xs text-body">
               <span
                 className={`h-[var(--spacing-2xs)] w-[var(--spacing-2xs)] rounded-pill flex-shrink-0 ${
                   REPEAT_TYPE_DOT[entry.repeatType] ?? "bg-subtle"

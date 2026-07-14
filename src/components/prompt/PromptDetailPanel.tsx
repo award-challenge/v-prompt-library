@@ -264,7 +264,7 @@ export function PromptDetailPanel({
 
       {/* ── 활용지표 ─────────────────────────────────── */}
       <div className="px-lg py-md border-b border-subtle/40 flex flex-col gap-sm">
-        <p className="text-caption font-semibold text-muted uppercase tracking-normal">
+        <p className="text-caption font-semibold text-ink uppercase tracking-normal">
           활용지표
         </p>
         <div className="flex flex-col gap-xs">

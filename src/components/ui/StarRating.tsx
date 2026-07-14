@@ -18,7 +18,7 @@ export function StarRating({ filled, size = 14 }: StarRatingProps) {
             className={
               isFilled
                 ? "fill-warning text-warning"
-                : "fill-hairline text-hairline"
+                : "fill-subtle/50 text-subtle/50"
             }
           />
         );
