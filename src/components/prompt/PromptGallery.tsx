@@ -200,18 +200,6 @@ const RECOMMENDED_SEARCH_TAG_POOL: RecommendedSearchTag[] = [
     ],
   },
   {
-    label: "상담 스크립트 생성",
-    aliases: [
-      "상담 스크립트 생성",
-      "상담 스크립트",
-      "회원 상담",
-      "학부모 상담",
-      "추천 스크립트",
-      "관리교사",
-      "온리원 상담",
-    ],
-  },
-  {
     label: "홍보 카피라이팅",
     aliases: [
       "홍보 카피라이팅",
