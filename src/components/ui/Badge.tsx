@@ -25,7 +25,7 @@ const AWARD_ICON: Record<string, typeof Crown> = {
 };
 
 const VARIANT_STYLE: Record<string, string> = {
-  category: "bg-surface-search/80 text-ink border-hairline",
+  category: "bg-surface-search/80 text-ink border-ink/10",
   tool: "bg-tool-bg text-tool-text border-tool-border/70",
   tag: "bg-surface-soft text-subtle border-hairline",
 };
